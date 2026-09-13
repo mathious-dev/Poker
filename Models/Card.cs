@@ -1,13 +1,13 @@
-﻿namespace Poker;
-
-public class Card
-{
-    public enum TypeCard{
+﻿namespace Poker.Models;
+public enum TypeCard{
         Carreau,
         Pique,
         Coeur,
         Trefle
     }
+public class Card
+{
+    
     public TypeCard Type{get;set;}
     public int Number{get;set;}
     // public Card StartPlacingCard(int tour,int[]? cardPlace)

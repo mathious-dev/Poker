@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualBasic;
-
+using Poker.Models;
 namespace Poker;
 
 public class Rule
@@ -18,7 +18,7 @@ public class Rule
         RoyalFlush
     }
     public RuleEnum combination{get;set;}
-    public (List<Player>,Player) RuleHightCard(List<Player> players)
+    public static (List<Player>,Player) RuleHightCard(List<Player> players)
     {
         var winners=new List<Player>();
         int higherCard=2;
