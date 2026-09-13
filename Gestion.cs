@@ -50,7 +50,7 @@ public class Gestion
             Name="Math",
             Deck=new Card[]
             {
-                new Card { Number = 6, Type = TypeCard.Coeur },
+                new Card { Number = 3, Type = TypeCard.Coeur },
                 new Card { Number = 10, Type = TypeCard.Pique }
             }
 
@@ -61,7 +61,7 @@ public class Gestion
             Deck=new Card[]
             {
                 new Card { Number = 10, Type = TypeCard.Coeur },
-                new Card { Number = 5, Type = TypeCard.Pique }
+                new Card { Number = 10, Type = TypeCard.Pique }
             }
         };
         var player3=new Player()
@@ -69,14 +69,21 @@ public class Gestion
             Name="Michel",
             Deck=new Card[]
             {
-                new Card { Number = 12, Type = TypeCard.Coeur },
+                new Card { Number = 2, Type = TypeCard.Coeur },
                 new Card { Number = 2, Type = TypeCard.Pique }
             }
         };
         listPlayers.Add(player1);
         listPlayers.Add(player2);
         listPlayers.Add(player3);
-        (listGagnant,winner)=Rule.RuleHightCard(listPlayers);
+        var listCard=new List<Card>()
+        {
+            new Card { Number = 8, Type = TypeCard.Carreau },
+            new Card { Number = 2, Type = TypeCard.Pique },
+            new Card { Number = 10, Type = TypeCard.Pique }
+        };
+        // (listGagnant,winner)=Rule.RulePair(listPlayers,listCard);
+        (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
         Console.WriteLine($"le gagnant est : {winner.Name}");
         if(listGagnant !=null)
         {

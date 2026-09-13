@@ -42,7 +42,7 @@ public class Rule
         }
         return (winners,winner);
     }
-    public (List<Player>,Player) RulePair(List<Player>players,List<Card> cardPlace)
+    public static (List<Player>,Player) RulePair(List<Player>players,List<Card> cardPlace)
     {
         var winners=new List<Player>();
         var winner=new Player();
@@ -52,23 +52,23 @@ public class Rule
             var allCards=GroupCards(player.Deck,cardPlace);
             
             var Pair=SearchPairOrThreeSame(allCards,2);
-            if(Pair.First()>highestPair)
+            if(Pair.Any())
             {
-                highestPair=Pair.First();
-                winner=player;
-                winners.Clear();
-            }
-            else if(Pair.First()==highestPair)
-            {
-                winners.Add(player);
-            }
-           
-            
-            
+                if(Pair.First()>highestPair)
+                {
+                    highestPair=Pair.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(Pair.First()==highestPair)
+                {
+                    winners.Add(player);
+                }
+            }     
         }
         return (winners,winner);
     }
-    public (List<Player>,Player) RuleThreeSameKind(List<Player>players,List<Card> cardPlace)
+    public static (List<Player>,Player) RuleThreeSameKind(List<Player>players,List<Card> cardPlace)
     {
         var winners=new List<Player>();
         var winner=new Player();
@@ -77,20 +77,23 @@ public class Rule
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var Three=SearchPairOrThreeSame(allCards,3);
-            if(Three.First()>highestThree)
+            if(Three.Any())
             {
-                highestThree=Three.First();
-                winner=player;
-                winners.Clear();
-            }
-            else if(Three.First()==highestThree)
-            {
-                winners.Add(player);
+                if(Three.First()>highestThree)
+                {
+                    highestThree=Three.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(Three.First()==highestThree)
+                {
+                    winners.Add(player);
+                }
             }
         }
         return (winners,winner);
     }
-    public List<int> SearchPairOrThreeSame(List<Card> allCards,int whereNumber)
+    public static List<int> SearchPairOrThreeSame(List<Card> allCards,int whereNumber)
     {
         var Pair=allCards.GroupBy(c=>c.Number)
                         .Where(g=>g.Count()>=whereNumber)
@@ -99,7 +102,7 @@ public class Rule
                         .ToList();
         return Pair;
     }
-    public List<Card> GroupCards(Card[] cardsPlayer,List<Card> cardPlace)
+    public static List<Card> GroupCards(Card[] cardsPlayer,List<Card> cardPlace)
     {
         var allCards=new List<Card>();
         allCards.AddRange(cardsPlayer);
