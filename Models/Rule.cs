@@ -51,7 +51,7 @@ public class Rule
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             
-            var Pair=SearchPairOrThreeSame(allCards,2);
+            var Pair=SearchPairOrThreeSameOrFourSame(allCards,2);
             if(Pair.Any())
             {
                 if(Pair.First()>highestPair)
@@ -76,7 +76,7 @@ public class Rule
         foreach(var player in players)
         {
             var allCards=GroupCards(player.Deck,cardPlace);
-            var Three=SearchPairOrThreeSame(allCards,3);
+            var Three=SearchPairOrThreeSameOrFourSame(allCards,3);
             if(Three.Any())
             {
                 if(Three.First()>highestThree)
@@ -93,7 +93,32 @@ public class Rule
         }
         return (winners,winner);
     }
-    public static List<int> SearchPairOrThreeSame(List<Card> allCards,int whereNumber)
+    public static (List<Player>,Player) RuleSquare(List<Player>players,List<Card> cardPlace)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestSquare=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var Four=SearchPairOrThreeSameOrFourSame(allCards,4);
+            if(Four.Any())
+            {
+                if(Four.First()>highestSquare)
+                {
+                    highestSquare=Four.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(Four.First()==highestSquare)
+                {
+                    winners.Add(player);
+                }
+            }
+        }
+         return (winners,winner);
+    }
+    public static List<int> SearchPairOrThreeSameOrFourSame(List<Card> allCards,int whereNumber)
     {
         var Pair=allCards.GroupBy(c=>c.Number)
                         .Where(g=>g.Count()>=whereNumber)
