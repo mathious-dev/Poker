@@ -64,13 +64,23 @@ public class Gestion
                 new Card { Number = 5, Type = TypeCard.Pique }
             }
         };
+        var player3=new Player()
+        {
+            Name="Michel",
+            Deck=new Card[]
+            {
+                new Card { Number = 12, Type = TypeCard.Coeur },
+                new Card { Number = 2, Type = TypeCard.Pique }
+            }
+        };
         listPlayers.Add(player1);
         listPlayers.Add(player2);
+        listPlayers.Add(player3);
         (listGagnant,winner)=Rule.RuleHightCard(listPlayers);
         Console.WriteLine($"le gagnant est : {winner.Name}");
         if(listGagnant !=null)
         {
-            Console.WriteLine($"Les gagnants sont : ");
+            Console.WriteLine($"Les autres gagnants sont : ");
             foreach(Player gagnant in listGagnant)
             {
                 Console.WriteLine($"{gagnant.Name}");
