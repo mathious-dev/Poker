@@ -18,27 +18,25 @@ public class Rule
         RoyalFlush
     }
     public RuleEnum combination{get;set;}
+    //utiliser LINQ avec max
     public static (List<Player>,Player) RuleHightCard(List<Player> players)
     {
         var winners=new List<Player>();
-        int higherCard=2;
+        int higherCard=0;
         var winner=new Player();
         foreach(var player in players)
         {
-            foreach(Card card in player.Deck)
+            var higherCardPlayer=player.Deck.Max(c=>c.Number);
+            if(higherCardPlayer>higherCard)
             {
-                if(card.Number>higherCard)
-                {
-                    higherCard=card.Number;   
-                    winner=player;      
-                    winners.Clear();
-                }
-                else if(card.Number==higherCard&& player!=winner)
-                {
-                    winners.Add(player);
-                }
+                higherCard=higherCardPlayer;   
+                winner=player;      
+                winners.Clear();
             }
-
+            else if(higherCardPlayer==higherCard&& player!=winner)
+            {
+                winners.Add(player);
+            }
         }
         return (winners,winner);
     }
@@ -78,6 +76,46 @@ public class Rule
                 {
                     winners.Add(player);
                 }
+            }
+        }
+         return (winners,winner);
+    }
+    public static (List<Player>,Player) RuleDoublePair(List<Player>players,List<Card> cardPlace,int sameKindNumber)
+    {
+        //Modifier pour le cas d'une troisième paire
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValueFirstPair=0;
+        int highestValueSecondPair=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
+            if(listSameKind.Any())
+            {
+                if(listSameKind.Count()==2)
+                {
+                    if(listSameKind.First()>highestValueFirstPair)
+                    {
+                        highestValueFirstPair=listSameKind.First();
+                        highestValueSecondPair= listSameKind.Last();
+                        winner=player;
+                        winners.Clear();
+                    }
+                    else if(listSameKind.First()==highestValueFirstPair)
+                    {
+                        if(listSameKind.Last()>highestValueSecondPair)
+                        {
+                            highestValueSecondPair=listSameKind.Last();
+                            winner=player;
+                            winners.Clear();
+                        }
+                        else if(listSameKind.Last()==highestValueSecondPair)
+                        {
+                            winners.Add(player);
+                        }
+                    }      
+                }     
             }
         }
          return (winners,winner);
