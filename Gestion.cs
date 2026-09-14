@@ -69,8 +69,8 @@ public class Gestion
             Name="Michel",
             Deck=new Card[]
             {
-                new Card { Number = 2, Type = TypeCard.Coeur },
-                new Card { Number = 2, Type = TypeCard.Pique }
+                new Card { Number = 10, Type = TypeCard.Coeur },
+                new Card { Number = 10, Type = TypeCard.Pique }
             }
         };
         listPlayers.Add(player1);
