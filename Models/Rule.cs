@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
 using Poker.Models;
 namespace Poker;
 
@@ -6,19 +7,18 @@ public class Rule
 {
     public enum RuleEnum
     {
-        HighCard,
-        Pair,
-        DoublePair,
-        ThreeSameKind,
+        HighCard,//fait
+        Pair,//fait
+        DoublePair,//fait
+        ThreeSameKind,//fait
         Follow,
         Color,
         Full,
-        Square,
+        Square,//fait
         FollowFlush,
         RoyalFlush
     }
     public RuleEnum combination{get;set;}
-    //utiliser LINQ avec max
     public static (List<Player>,Player) RuleHightCard(List<Player> players)
     {
         var winners=new List<Player>();
@@ -55,6 +55,7 @@ public class Rule
         (var winners,var winner)=GroupRuleSameKind(players,cardPlace,4);
         return (winners,winner);
     }
+    //refactoriser la règle de même couleur
     public static (List<Player>,Player) GroupRuleSameKind(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
         var winners=new List<Player>();
@@ -79,6 +80,42 @@ public class Rule
             }
         }
          return (winners,winner);
+    }
+    public static (List<Player>,Player) RuleSameCardColor(List<Player>players,List<Card> cardPlace)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValue=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listSameColor=GroupCardByColor(allCards);
+            if(listSameColor.Any())
+            {
+                if(listSameColor.First()>highestValue)
+                {
+                    highestValue=listSameColor.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(listSameColor.First()==highestValue)
+                {
+                    winners.Add(player);
+                }
+            }
+        }
+         return (winners,winner);
+    }
+    public static List<int> GroupCardByColor(List<Card> cards)
+    {
+        var listCardSameColor=cards.GroupBy(g=>g.Type)
+                                .Where(c=>c.Count()==5)
+                                .SelectMany(c=>c)//va ouvrir la boite "coeur" par exemple avec toutes les cartes
+                                .Select(c=>c.Number)
+                                .OrderByDescending(c=>c)
+                                .Take(5)
+                                .ToList();
+        return listCardSameColor;
     }
     public static (List<Player>,Player) RuleDoublePair(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
