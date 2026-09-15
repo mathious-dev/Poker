@@ -45,6 +45,46 @@ public class Rule
         (var winners,var winner)=GroupRuleSameKind(players,cardPlace,2);
         return (winners,winner);
     }
+    public static (List<Player>,Player) RuleDoublePair(List<Player>players,List<Card> cardPlace,int sameKindNumber)
+    {
+        //Modifier pour le cas d'une troisième paire
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValueFirstPair=0;
+        int highestValueSecondPair=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
+            if(listSameKind.Any())
+            {
+                if(listSameKind.Count()==2)
+                {
+                    if(listSameKind.First()>highestValueFirstPair)
+                    {
+                        highestValueFirstPair=listSameKind.First();
+                        highestValueSecondPair= listSameKind.Last();
+                        winner=player;
+                        winners.Clear();
+                    }
+                    else if(listSameKind.First()==highestValueFirstPair)
+                    {
+                        if(listSameKind.Last()>highestValueSecondPair)
+                        {
+                            highestValueSecondPair=listSameKind.Last();
+                            winner=player;
+                            winners.Clear();
+                        }
+                        else if(listSameKind.Last()==highestValueSecondPair)
+                        {
+                            winners.Add(player);
+                        }
+                    }      
+                }     
+            }
+        }
+         return (winners,winner);
+    }
     public static (List<Player>,Player) RuleThreeSameKind(List<Player>players,List<Card> cardPlace)
     {
         (var winners,var winner)=GroupRuleSameKind(players,cardPlace,3);
@@ -54,36 +94,6 @@ public class Rule
     {
         (var winners,var winner)=GroupRuleSameKind(players,cardPlace,4);
         return (winners,winner);
-    }
-    
-    public static (List<Player>,Player) GroupRuleSameKind(List<Player>players,List<Card> cardPlace,int sameKindNumber)
-    {
-        var winners=new List<Player>();
-        var winner=new Player();
-        int highestValue=0;
-        foreach(var player in players)
-        {
-            var allCards=GroupCards(player.Deck,cardPlace);
-            var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
-            ConditionHighestValueAndWinners(listSameKind,ref highestValue,winners,ref winner,player);
-        }
-         return (winners,winner);
-    }
-    public static void ConditionHighestValueAndWinners(List<int> listSameKind,ref int highestValue,List<Player>winners,ref Player winner,Player player)
-    {
-        if(listSameKind.Any())
-            {
-                if(listSameKind.First()>highestValue)
-                {
-                    highestValue=listSameKind.First();
-                    winner=player;
-                    winners.Clear();
-                }
-                else if(listSameKind.First()==highestValue)
-                {
-                    winners.Add(player);
-                }
-            }
     }
     public static (List<Player>,Player) RuleSameCardColor(List<Player>players,List<Card> cardPlace)
     {
@@ -129,6 +139,19 @@ public class Rule
         }
          return (winners,winner);
     }
+    public static (List<Player>,Player) GroupRuleSameKind(List<Player>players,List<Card> cardPlace,int sameKindNumber)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValue=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
+            ConditionHighestValueAndWinners(listSameKind,ref highestValue,winners,ref winner,player);
+        }
+         return (winners,winner);
+    }
     public static List<int> GroupCardByColor(List<Card> cards)
     {
         //on va prendre toutes les cartes afin de pouvoir utiliser la méthode pour la suite flush
@@ -157,6 +180,29 @@ public class Rule
         if(listCardFollowFlush.Any())
             listCardFollowFlush=IsFollow(listCardFollowFlush);
         return listCardFollowFlush;
+    }
+    public static List<Card> GroupCards(Card[] cardsPlayer,List<Card> cardPlace)
+    {
+        var allCards=new List<Card>();
+        allCards.AddRange(cardsPlayer);
+        allCards.AddRange(cardPlace);
+        return allCards;
+    }
+    public static void ConditionHighestValueAndWinners(List<int> listSameKind,ref int highestValue,List<Player>winners,ref Player winner,Player player)
+    {
+        if(listSameKind.Any())
+            {
+                if(listSameKind.First()>highestValue)
+                {
+                    highestValue=listSameKind.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(listSameKind.First()==highestValue)
+                {
+                    winners.Add(player);
+                }
+            }
     }
     public static List<int> IsFollow(List<int> listCardFollow)
     {
@@ -189,46 +235,7 @@ public class Rule
         else
             return listEmpty;
     }
-    public static (List<Player>,Player) RuleDoublePair(List<Player>players,List<Card> cardPlace,int sameKindNumber)
-    {
-        //Modifier pour le cas d'une troisième paire
-        var winners=new List<Player>();
-        var winner=new Player();
-        int highestValueFirstPair=0;
-        int highestValueSecondPair=0;
-        foreach(var player in players)
-        {
-            var allCards=GroupCards(player.Deck,cardPlace);
-            var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
-            if(listSameKind.Any())
-            {
-                if(listSameKind.Count()==2)
-                {
-                    if(listSameKind.First()>highestValueFirstPair)
-                    {
-                        highestValueFirstPair=listSameKind.First();
-                        highestValueSecondPair= listSameKind.Last();
-                        winner=player;
-                        winners.Clear();
-                    }
-                    else if(listSameKind.First()==highestValueFirstPair)
-                    {
-                        if(listSameKind.Last()>highestValueSecondPair)
-                        {
-                            highestValueSecondPair=listSameKind.Last();
-                            winner=player;
-                            winners.Clear();
-                        }
-                        else if(listSameKind.Last()==highestValueSecondPair)
-                        {
-                            winners.Add(player);
-                        }
-                    }      
-                }     
-            }
-        }
-         return (winners,winner);
-    }
+    
     public static List<int> SearchPairOrThreeSameOrFourSame(List<Card> allCards,int whereNumber)
     {
         var SameKind=allCards.GroupBy(c=>c.Number)
@@ -238,11 +245,5 @@ public class Rule
                         .ToList();
         return SameKind;
     }
-    public static List<Card> GroupCards(Card[] cardsPlayer,List<Card> cardPlace)
-    {
-        var allCards=new List<Card>();
-        allCards.AddRange(cardsPlayer);
-        allCards.AddRange(cardPlace);
-        return allCards;
-    }
+    
 }
