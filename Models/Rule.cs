@@ -55,7 +55,7 @@ public class Rule
         (var winners,var winner)=GroupRuleSameKind(players,cardPlace,4);
         return (winners,winner);
     }
-    //refactoriser la règle de même couleur
+    
     public static (List<Player>,Player) GroupRuleSameKind(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
         var winners=new List<Player>();
@@ -65,7 +65,13 @@ public class Rule
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
-            if(listSameKind.Any())
+            ConditionHighestValueAndWinners(listSameKind,ref highestValue,winners,ref winner,player);
+        }
+         return (winners,winner);
+    }
+    public static void ConditionHighestValueAndWinners(List<int> listSameKind,ref int highestValue,List<Player>winners,ref Player winner,Player player)
+    {
+        if(listSameKind.Any())
             {
                 if(listSameKind.First()>highestValue)
                 {
@@ -78,8 +84,6 @@ public class Rule
                     winners.Add(player);
                 }
             }
-        }
-         return (winners,winner);
     }
     public static (List<Player>,Player) RuleSameCardColor(List<Player>players,List<Card> cardPlace)
     {
@@ -90,22 +94,11 @@ public class Rule
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listSameColor=GroupCardByColor(allCards);
-            if(listSameColor.Any())
-            {
-                if(listSameColor.First()>highestValue)
-                {
-                    highestValue=listSameColor.First();
-                    winner=player;
-                    winners.Clear();
-                }
-                else if(listSameColor.First()==highestValue)
-                {
-                    winners.Add(player);
-                }
-            }
+            ConditionHighestValueAndWinners(listSameColor,ref highestValue,winners,ref winner,player);
         }
          return (winners,winner);
     }
+    //ne pas oublier règle de l'As
     public static (List<Player>,Player) RuleFollow(List<Player>players,List<Card> cardPlace)
     {
         var winners=new List<Player>();
@@ -115,19 +108,7 @@ public class Rule
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listFollow=GroupCardByFollow(allCards);
-            if(listFollow.Any())
-            {
-                if(listFollow.First()>highestValue)
-                {
-                    highestValue=listFollow.First();
-                    winner=player;
-                    winners.Clear();
-                }
-                else if(listFollow.First()==highestValue)
-                {
-                    winners.Add(player);
-                }
-            }
+            ConditionHighestValueAndWinners(listFollow,ref highestValue,winners,ref winner,player);
         }
          return (winners,winner);
     }

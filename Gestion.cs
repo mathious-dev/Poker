@@ -50,8 +50,8 @@ public class Gestion
             Name="Math",
             Deck=new Card[]
             {
-                new Card { Number = 3, Type = TypeCard.Coeur },
-                new Card { Number = 10, Type = TypeCard.Pique }
+                new Card { Number = 6, Type = TypeCard.Coeur },
+                new Card { Number = 7, Type = TypeCard.Pique }
             }
 
         };
@@ -60,8 +60,8 @@ public class Gestion
             Name="François",
             Deck=new Card[]
             {
-                new Card { Number = 10, Type = TypeCard.Coeur },
-                new Card { Number = 10, Type = TypeCard.Pique }
+                new Card { Number = 2, Type = TypeCard.Coeur },
+                new Card { Number = 6, Type = TypeCard.Pique }
             }
         };
         var player3=new Player()
@@ -69,8 +69,8 @@ public class Gestion
             Name="Michel",
             Deck=new Card[]
             {
-                new Card { Number = 10, Type = TypeCard.Coeur },
-                new Card { Number = 10, Type = TypeCard.Pique }
+                new Card { Number = 6, Type = TypeCard.Coeur },
+                new Card { Number = 7, Type = TypeCard.Pique }
             }
         };
         listPlayers.Add(player1);
@@ -78,12 +78,15 @@ public class Gestion
         listPlayers.Add(player3);
         var listCard=new List<Card>()
         {
-            new Card { Number = 8, Type = TypeCard.Carreau },
-            new Card { Number = 2, Type = TypeCard.Pique },
-            new Card { Number = 10, Type = TypeCard.Pique }
+            new Card { Number = 10, Type = TypeCard.Carreau },
+            new Card { Number = 13, Type = TypeCard.Trefle },
+            new Card { Number = 3, Type = TypeCard.Pique },
+            new Card { Number = 4, Type = TypeCard.Coeur },
+            new Card { Number = 5, Type = TypeCard.Coeur }
         };
         // (listGagnant,winner)=Rule.RulePair(listPlayers,listCard);
-        (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
+        // (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
+        (listGagnant,winner)=Rule.RuleFollow(listPlayers,listCard);
         Console.WriteLine($"le gagnant est : {winner.Name}");
         if(listGagnant !=null)
         {
