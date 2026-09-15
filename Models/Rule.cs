@@ -11,7 +11,7 @@ public class Rule
         Pair,//fait
         DoublePair,//fait
         ThreeSameKind,//fait
-        Follow,
+        Follow,//fait
         Color,//fait
         Full,
         Square,//fait
@@ -94,7 +94,11 @@ public class Rule
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listSameColor=GroupCardByColor(allCards);
-            ConditionHighestValueAndWinners(listSameColor,ref highestValue,winners,ref winner,player);
+            if(listSameColor.Any())
+            {
+                listSameColor=listSameColor.Take(5).ToList();
+                ConditionHighestValueAndWinners(listSameColor,ref highestValue,winners,ref winner,player);
+            }
         }
          return (winners,winner);
     }
@@ -112,14 +116,27 @@ public class Rule
         }
          return (winners,winner);
     }
+    public static (List<Player>,Player) RuleFollowFlush(List<Player>players,List<Card> cardPlace)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValue=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listFollowFlush=GroupCardByFollowFlush(allCards);
+            ConditionHighestValueAndWinners(listFollowFlush,ref highestValue,winners,ref winner,player);
+        }
+         return (winners,winner);
+    }
     public static List<int> GroupCardByColor(List<Card> cards)
     {
+        //on va prendre toutes les cartes afin de pouvoir utiliser la méthode pour la suite flush
         var listCardSameColor=cards.GroupBy(g=>g.Type)
-                                .Where(c=>c.Count()==5)
+                                .Where(c=>c.Count()>=5)
                                 .SelectMany(c=>c)//va ouvrir la boite "coeur" par exemple avec toutes les cartes
                                 .Select(c=>c.Number)
                                 .OrderByDescending(c=>c)
-                                .Take(5)
                                 .ToList();
         return listCardSameColor;
     }
@@ -130,6 +147,19 @@ public class Rule
                                 .Distinct()
                                 .OrderByDescending(c=>c)
                                 .ToList();
+        listCardFollow=IsFollow(listCardFollow);
+        return listCardFollow;
+    }
+    public static List<int> GroupCardByFollowFlush(List<Card> cards)
+    {
+        //faire la vérification de l'As qui peut être avec 2 ou un roi
+        var listCardFollowFlush=GroupCardByColor(cards);
+        if(listCardFollowFlush.Any())
+            listCardFollowFlush=IsFollow(listCardFollowFlush);
+        return listCardFollowFlush;
+    }
+    public static List<int> IsFollow(List<int> listCardFollow)
+    {
         var count=1;
         var countSinceStart=2;//on le commence à 2 car si count est à 5 il y a  un break, on ne va donc jamais atteindre le countSinceStart++ et la soustraction de skip sera faussée
         var previousCard=0;
@@ -149,12 +179,9 @@ public class Rule
                                 .ToList();
                     break;
                 }
-                    
             }
             else
-            {
                 count=1;
-            }
             countSinceStart++;
         }
         if(count==5)
