@@ -17,7 +17,7 @@ public class Rule
         Full,
         Square,//fait
         FollowFlush,//fait
-        RoyalFlush
+        RoyalFlush//fait
     }
     public RuleEnum combination{get;set;}
     public static (List<Player>,Player) RuleHightCard(List<Player> players)
@@ -43,7 +43,7 @@ public class Rule
     }
     public static (List<Player>,Player) RulePair(List<Player>players,List<Card> cardPlace)
     {
-        (var winners,var winner)=GroupRuleSameKind(players,cardPlace,2);
+        (var winners,var winner)=GroupRuleSameNumber(players,cardPlace,2);
         return (winners,winner);
     }
     public static (List<Player>,Player) RuleDoublePair(List<Player>players,List<Card> cardPlace,int sameKindNumber)
@@ -88,12 +88,12 @@ public class Rule
     }
     public static (List<Player>,Player) RuleThreeSameKind(List<Player>players,List<Card> cardPlace)
     {
-        (var winners,var winner)=GroupRuleSameKind(players,cardPlace,3);
+        (var winners,var winner)=GroupRuleSameNumber(players,cardPlace,3);
         return (winners,winner);
     }
     public static (List<Player>,Player) RuleSquare(List<Player>players,List<Card> cardPlace)
     {
-        (var winners,var winner)=GroupRuleSameKind(players,cardPlace,4);
+        (var winners,var winner)=GroupRuleSameNumber(players,cardPlace,4);
         return (winners,winner);
     }
     public static (List<Player>,Player) RuleSameCardColor(List<Player>players,List<Card> cardPlace)
@@ -127,6 +127,22 @@ public class Rule
         }
          return (winners,winner);
     }
+    //à finir
+    public static (List<Player>,Player) RuleFull(List<Player>players,List<Card> cardPlace)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValue=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listFulldouble=SearchPairOrThreeSameOrFourSame(allCards,2);
+            var listFullTriple=SearchPairOrThreeSameOrFourSame(allCards,3);
+            ConditionHighestValueAndWinners(listFulldouble,ref highestValue,winners,ref winner,player);
+            ConditionHighestValueAndWinners(listFullTriple,ref highestValue,winners,ref winner,player);
+        }
+         return (winners,winner);
+    }
     public static (List<Player>,Player) RuleFollowFlush(List<Player>players,List<Card> cardPlace)
     {
         var winners=new List<Player>();
@@ -154,7 +170,7 @@ public class Rule
          return (winners,winner);
     }
 
-    public static (List<Player>,Player) GroupRuleSameKind(List<Player>players,List<Card> cardPlace,int sameKindNumber)
+    public static (List<Player>,Player) GroupRuleSameNumber(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
         var winners=new List<Player>();
         var winner=new Player();
