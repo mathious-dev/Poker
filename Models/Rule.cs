@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
 using Poker.Models;
 namespace Poker;
@@ -15,7 +16,7 @@ public class Rule
         Color,//fait
         Full,
         Square,//fait
-        FollowFlush,
+        FollowFlush,//fait
         RoyalFlush
     }
     public RuleEnum combination{get;set;}
@@ -139,6 +140,20 @@ public class Rule
         }
          return (winners,winner);
     }
+    public static (List<Player>,Player) RuleFollowRoyalFlush(List<Player>players,List<Card> cardPlace)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValue=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listFollowRoyalFlush=GroupCardByFollowRoyalFlush(allCards);
+            ConditionHighestValueAndWinners(listFollowRoyalFlush,ref highestValue,winners,ref winner,player);
+        }
+         return (winners,winner);
+    }
+
     public static (List<Player>,Player) GroupRuleSameKind(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
         var winners=new List<Player>();
@@ -180,6 +195,13 @@ public class Rule
         if(listCardFollowFlush.Any())
             listCardFollowFlush=IsFollow(listCardFollowFlush);
         return listCardFollowFlush;
+    }
+    public static List<int> GroupCardByFollowRoyalFlush(List<Card> cards)
+    {
+        var listRoyal=GroupCardByFollowFlush(cards);
+        if(listRoyal.Any()&&listRoyal.First()==14)
+            return listRoyal;
+        return new List<int>();
     }
     public static List<Card> GroupCards(Card[] cardsPlayer,List<Card> cardPlace)
     {
