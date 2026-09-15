@@ -12,7 +12,7 @@ public class Rule
         DoublePair,//fait
         ThreeSameKind,//fait
         Follow,
-        Color,
+        Color,//fait
         Full,
         Square,//fait
         FollowFlush,
@@ -106,6 +106,31 @@ public class Rule
         }
          return (winners,winner);
     }
+    public static (List<Player>,Player) RuleFollow(List<Player>players,List<Card> cardPlace)
+    {
+        var winners=new List<Player>();
+        var winner=new Player();
+        int highestValue=0;
+        foreach(var player in players)
+        {
+            var allCards=GroupCards(player.Deck,cardPlace);
+            var listFollow=GroupCardByFollow(allCards);
+            if(listFollow.Any())
+            {
+                if(listFollow.First()>highestValue)
+                {
+                    highestValue=listFollow.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(listFollow.First()==highestValue)
+                {
+                    winners.Add(player);
+                }
+            }
+        }
+         return (winners,winner);
+    }
     public static List<int> GroupCardByColor(List<Card> cards)
     {
         var listCardSameColor=cards.GroupBy(g=>g.Type)
@@ -116,6 +141,45 @@ public class Rule
                                 .Take(5)
                                 .ToList();
         return listCardSameColor;
+    }
+    public static List<int> GroupCardByFollow(List<Card> cards)
+    {
+        //faire la vérification de l'As qui peut être avec 2 ou un roi
+        var listCardFollow=cards.Select(c=>c.Number)
+                                .Distinct()
+                                .OrderByDescending(c=>c)
+                                .ToList();
+        var count=1;
+        var countSinceStart=2;//on le commence à 2 car si count est à 5 il y a  un break, on ne va donc jamais atteindre le countSinceStart++ et la soustraction de skip sera faussée
+        var previousCard=0;
+        var listEmpty=new List<int>();
+        for(int i=0;i<listCardFollow.Count()-1;i++)//-1 car on va toujours comparer avec le chiffre d'après
+        {
+            previousCard=listCardFollow[i];
+            if(listCardFollow[i+1]==previousCard-1)
+            {
+                count++;
+                
+                if(count==5)
+                {
+                    var skip=countSinceStart-count;
+                    listCardFollow=listCardFollow.Skip(skip)//il faut modifier la liste
+                                .Take(5)
+                                .ToList();
+                    break;
+                }
+                    
+            }
+            else
+            {
+                count=1;
+            }
+            countSinceStart++;
+        }
+        if(count==5)
+            return listCardFollow;
+        else
+            return listEmpty;
     }
     public static (List<Player>,Player) RuleDoublePair(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
