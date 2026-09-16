@@ -9,17 +9,21 @@ public class Card
 {
     
     public TypeCard Type{get;set;}
-    public int Number{get;set;}
-    // public Card StartPlacingCard(int tour,int[]? cardPlace)
-    // {
-    //     if(tour==1 &&cardPlace is null)
-    //     {
-    //         Card newCard=new Card();
-    //         return newCard;
-    //     }
-    // }
-    // public Card StartGame()
-    // {
-        
-    // }
+    private int _number;
+    public int Number
+    {
+        get{return _number;}
+        set
+        {
+            if(value<15&&value>0)
+                _number=value;
+            else
+                throw new ArgumentOutOfRangeException("Le nombre doit être entre 1 et 14 compris");
+        }
+    }
+    public Card(int number)
+    {
+        this.Number=number;
+    }
+    
 }

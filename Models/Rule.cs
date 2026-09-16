@@ -8,13 +8,13 @@ public class Rule
 {
     public enum RuleEnum
     {
-        HighCard,//fait
+        HighCard=1,//fait
         Pair,//fait
         DoublePair,//fait
         ThreeSameKind,//fait
         Follow,//fait
         Color,//fait
-        Full,
+        Full,//fait
         Square,//fait
         FollowFlush,//fait
         RoyalFlush//fait

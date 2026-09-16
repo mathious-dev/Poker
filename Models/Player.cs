@@ -10,4 +10,5 @@ public class Player
         mainPot+=AmountBet;
         return mainPot;
     }
+    
 }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Poker.Models;
 public class Gestion
 {
+    List<Player> players=new List<Player>();
     public Gestion()
     {
         Init();
@@ -38,7 +39,10 @@ public class Gestion
     }
     public void StartGame()
     {
-        
+        // while()
+        // {
+            
+        // }
     }
     public void Test()
     {
@@ -50,8 +54,8 @@ public class Gestion
             Name="Math",
             Deck=new Card[]
             {
-                new Card { Number = 10, Type = TypeCard.Coeur },
-                new Card { Number = 8, Type = TypeCard.Coeur }
+                new Card(10) {  Type = TypeCard.Coeur },
+                new Card(10) { Type = TypeCard.Coeur }
             }
 
         };
@@ -60,8 +64,8 @@ public class Gestion
             Name="François",
             Deck=new Card[]
             {
-                new Card { Number = 10, Type = TypeCard.Coeur },
-                new Card { Number = 12, Type = TypeCard.Coeur }
+                new Card(10) {  Type = TypeCard.Coeur },
+                new Card(10) { Type = TypeCard.Coeur }
             }
         };
         var player3=new Player()
@@ -69,8 +73,8 @@ public class Gestion
             Name="Michel",
             Deck=new Card[]
             {
-                new Card { Number = 6, Type = TypeCard.Coeur },
-                new Card { Number = 7, Type = TypeCard.Pique }
+                new Card(10) {  Type = TypeCard.Coeur },
+                new Card(10) {  Type = TypeCard.Pique }
             }
         };
         listPlayers.Add(player1);
@@ -78,11 +82,11 @@ public class Gestion
         listPlayers.Add(player3);
         var listCard=new List<Card>()
         {
-            new Card { Number = 10, Type = TypeCard.Pique },
-            new Card { Number = 4, Type = TypeCard.Trefle },
-            new Card { Number = 10, Type = TypeCard.Coeur },
-            new Card { Number = 12, Type = TypeCard.Coeur },
-            new Card { Number = 8, Type = TypeCard.Coeur }
+            new Card(10) {  Type = TypeCard.Pique },
+            new Card(10) { Type = TypeCard.Trefle },
+            new Card(10) {  Type = TypeCard.Coeur },
+            new Card(10) {  Type = TypeCard.Coeur },
+            new Card(10) { Type = TypeCard.Coeur }
         };
         // (listGagnant,winner)=Rule.RulePair(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
