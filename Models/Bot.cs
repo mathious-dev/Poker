@@ -14,6 +14,10 @@ public class Bot : Player
                 throw new ArgumentOutOfRangeException("Le niveau du bot doit être entre 1 et 3 compris");
         }
     }
+    public Bot(int level)
+    {
+        this.Level=level;
+    }
     public void BotAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin,ref int  mainPot)
     {
         

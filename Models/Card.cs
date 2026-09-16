@@ -1,6 +1,6 @@
 ﻿namespace Poker.Models;
 public enum TypeCard{
-        Carreau,
+        Carreau=1,
         Pique,
         Coeur,
         Trefle
@@ -24,6 +24,18 @@ public class Card
     public Card(int number)
     {
         this.Number=number;
+    }
+    public static List<Card> GeneralDeckCard()
+    {
+        var listCards=new List<Card>();
+        for(int i=1;i<=13;i++)
+        {
+            for(int j=1;j<5;j++)
+            {
+                listCards.Add(new Card(i){Type=(TypeCard)j});
+            }
+        }
+        return listCards;
     }
     
 }

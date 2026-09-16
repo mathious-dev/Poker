@@ -5,14 +5,10 @@ using Poker.Models;
 public class Gestion
 {
     List<Player> players=new List<Player>();
+    List<Bot> Bots=new List<Bot>();
     public Gestion()
     {
-        Init();
         Menu();
-    }
-    public void Init()
-    {
-        
     }
     public void Menu()
     {
@@ -39,10 +35,10 @@ public class Gestion
     }
     public void StartGame()
     {
-        // while()
-        // {
+        while(players.Count()==1)//ou si on clique sur une certaines touches pour terminer, ajouter plus tard
+        {
             
-        // }
+        }
     }
     public void Test()
     {
@@ -52,11 +48,10 @@ public class Gestion
         var player1=new Player
         {
             Name="Math",
-            Deck=new Card[]
-            {
-                new Card(10) {  Type = TypeCard.Coeur },
-                new Card(10) { Type = TypeCard.Coeur }
-            }
+            Deck=[
+                new (10) {  Type = TypeCard.Coeur },
+                new (10) { Type = TypeCard.Coeur }
+            ]
 
         };
         var player2=new Player()
