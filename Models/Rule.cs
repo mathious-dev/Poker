@@ -269,6 +269,10 @@ public class Rule
         var countSinceStart=2;//on le commence à 2 car si count est à 5 il y a  un break, on ne va donc jamais atteindre le countSinceStart++ et la soustraction de skip sera faussée
         var previousCard=0;
         var listEmpty=new List<int>();
+        if(listCardFollow.Contains(14))
+            listCardFollow.Add(1);
+            
+        
         for(int i=0;i<listCardFollow.Count()-1;i++)//-1 car on va toujours comparer avec le chiffre d'après
         {
             previousCard=listCardFollow[i];

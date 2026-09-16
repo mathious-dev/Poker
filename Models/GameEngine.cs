@@ -42,6 +42,9 @@ public class GameEngine
                 SecondCard
             ];
         }
+        bots.Add(bot1);
+        bots.Add(bot2);
+        bots.Add(bot3);
     }
     public (Card,Card) GiveCards(List<Card> listCards)
     {

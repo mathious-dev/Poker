@@ -49,8 +49,8 @@ public class Gestion
         {
             Name="Math",
             Deck=[
-                new (10) {  Type = TypeCard.Coeur },
-                new (10) { Type = TypeCard.Coeur }
+                new (6) {  Type = TypeCard.Coeur },
+                new (2) { Type = TypeCard.Coeur }
             ]
 
         };
@@ -59,8 +59,8 @@ public class Gestion
             Name="François",
             Deck=new Card[]
             {
-                new Card(10) {  Type = TypeCard.Coeur },
-                new Card(10) { Type = TypeCard.Coeur }
+                new Card(14) {  Type = TypeCard.Coeur },
+                new Card(2) { Type = TypeCard.Coeur }
             }
         };
         var player3=new Player()
@@ -78,17 +78,17 @@ public class Gestion
         var listCard=new List<Card>()
         {
             new Card(10) {  Type = TypeCard.Pique },
-            new Card(10) { Type = TypeCard.Trefle },
-            new Card(10) {  Type = TypeCard.Coeur },
-            new Card(10) {  Type = TypeCard.Coeur },
+            new Card(3) { Type = TypeCard.Trefle },
+            new Card(4) {  Type = TypeCard.Coeur },
+            new Card(5) {  Type = TypeCard.Coeur },
             new Card(10) { Type = TypeCard.Coeur }
         };
         // (listGagnant,winner)=Rule.RulePair(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
-        // (listGagnant,winner)=Rule.RuleFollow(listPlayers,listCard);
+        (listGagnant,winner)=Rule.RuleFollow(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleFollowFlush(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleFollowRoyalFlush(listPlayers,listCard);
-        (listGagnant,winner)=Rule.RuleFull(listPlayers,listCard);
+        // (listGagnant,winner)=Rule.RuleFull(listPlayers,listCard);
         Console.WriteLine($"le gagnant est : {winner.Name}");
         if(listGagnant !=null)
         {
