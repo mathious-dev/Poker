@@ -3,6 +3,7 @@
 public class GameEngine
 {
     List<Card>listCardsStart=Card.GeneralDeckCard();
+    int countRound=1;
     public void Init(List<Bot>bots, List<Player> players)
     {
         Random randomLevel=new Random();
@@ -51,6 +52,14 @@ public class GameEngine
         foreach(Bot bot in bots)
         {
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
+        }
+    }
+    public void Round(List<Bot>bots,List<Player> players,int minBet,int mainPot)
+    {
+        
+        foreach(Bot bot in bots)
+        {
+            bot.BotAction(bot.Level,);//appliquer avant au bot les combinaisons pour qu'il sache quoi faire
         }
     }
     public (Card,Card) GiveCards(List<Card> listCards)

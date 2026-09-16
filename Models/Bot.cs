@@ -24,7 +24,7 @@ public class Bot : Player
         int amountBet=DeclarationOfAction( level, highestValue, combinationStart, maxCoin);
         Bet(ref mainPot,amountBet);
     }
-    public bool Bluff(int level)
+    public  bool Bluff(int level)
     {
         Random randomBluff=new Random();
         bool bluff=false;
@@ -36,7 +36,7 @@ public class Bot : Player
         }
        return bluff;
     }
-    public void BluffBot(int chanceForBluff,ref bool bluff)
+    public  void BluffBot(int chanceForBluff,ref bool bluff)
     {
         Random randomBluff=new Random();
         int isBluffing=0;
@@ -48,7 +48,7 @@ public class Bot : Player
     }
     
     //il faudra définir en fonction de la mise obligatoire aussi
-    public void BotLevelEasy(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
+    public  void BotLevelEasy(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
     {
         switch((combinationInt,highestValue))
         {
@@ -83,7 +83,7 @@ public class Bot : Player
         }
     }
     //définir chance
-    public void BotLevelMiddle(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
+    public  void BotLevelMiddle(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
     {
         switch((combinationInt,highestValue))
         {
@@ -110,7 +110,7 @@ public class Bot : Player
         }
     }
     //définir chance
-    public void BotLevelHard(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
+    public  void BotLevelHard(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
     {
         switch((combinationInt,highestValue))
         {
@@ -140,7 +140,7 @@ public class Bot : Player
             ;break;
         }
     }
-    public int DeclarationOfAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin)
+    public  int DeclarationOfAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin)
     {
         int combinationInt=(int)combinationStart;
         int amountBet=0;

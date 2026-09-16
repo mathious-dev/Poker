@@ -6,6 +6,7 @@ public class Gestion
 {
     List<Player> players=new List<Player>();
     List<Bot> bots=new List<Bot>();
+    
     public Gestion()
     {
         Menu();
@@ -35,21 +36,24 @@ public class Gestion
     }
     public void StartGame()
     {
+        int minBet=50;
+        int mainPot=0;
         var player=new Player();
         players.Add(player);
         string name=null;
-        // while(players.Count()!=0)//ou si on clique sur une certaines touches pour terminer, ajouter plus tard
-        // {
-            while(string.IsNullOrWhiteSpace(name))
-            {
-                Console.WriteLine("\nQuelle est votre nom? ");
-                name=Console.ReadLine();
-            }
-            player.Name=name;
-            var gameEngine=new GameEngine();
-            gameEngine.Init(bots,players);
-            Card.showCards(player.Deck);
-        // }
+        while(string.IsNullOrWhiteSpace(name))
+        {
+            Console.WriteLine("\nQuelle est votre nom? ");
+            name=Console.ReadLine();
+        }
+        player.Name=name;
+        var gameEngine=new GameEngine();
+        gameEngine.Init(bots,players);
+        Card.showCards(player.Deck);
+        while(bots.Count()+players.Count==1)
+        {
+            gameEngine.Round(bots,players,minBet,mainPot);
+        }
     }
     public void Test()
     {
