@@ -5,7 +5,7 @@ using Poker.Models;
 public class Gestion
 {
     List<Player> players=new List<Player>();
-    List<Bot> Bots=new List<Bot>();
+    List<Bot> bots=new List<Bot>();
     public Gestion()
     {
         Menu();
@@ -35,10 +35,21 @@ public class Gestion
     }
     public void StartGame()
     {
-        while(players.Count()==1)//ou si on clique sur une certaines touches pour terminer, ajouter plus tard
-        {
-            
-        }
+        var player=new Player();
+        players.Add(player);
+        string name=null;
+        // while(players.Count()!=0)//ou si on clique sur une certaines touches pour terminer, ajouter plus tard
+        // {
+            while(string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("\nQuelle est votre nom? ");
+                name=Console.ReadLine();
+            }
+            player.Name=name;
+            var gameEngine=new GameEngine();
+            gameEngine.Init(bots,players);
+            Card.showCards(player.Deck);
+        // }
     }
     public void Test()
     {

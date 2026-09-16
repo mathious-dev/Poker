@@ -5,6 +5,13 @@ public enum TypeCard{
         Coeur,
         Trefle
     }
+public enum FaceCard
+{
+    Valet = 11,
+    Dame = 12,
+    Roi = 13,
+    As = 14
+}   
 public class Card
 {
     
@@ -37,5 +44,30 @@ public class Card
         }
         return listCards;
     }
-    
+    public static void showCards(IEnumerable<Card> cards)
+    {
+        if(cards.Any())
+        {
+            Console.WriteLine($"\nVoici les cartes");
+            foreach(Card card in cards)
+            {
+                if(card.Number>10)
+                    Console.WriteLine($"\n{(FaceCard)card.Number} de {card.Type}");
+                else
+                    Console.WriteLine($"\n{card.Number} de {card.Type}");
+            }
+        }
+        else if(cards!=null)
+        {
+            Console.WriteLine($"\nVoici vos cartes");
+            foreach(Card card in cards)
+            {
+                if(card.Number>10)
+                    Console.WriteLine($"\n{(FaceCard)card.Number} de {card.Type}");
+                else
+                    Console.WriteLine($"\n{card.Number} de {card.Type}");
+            }
+        }
+        
+    }
 }

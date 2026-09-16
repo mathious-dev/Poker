@@ -20,7 +20,7 @@ public class GameEngine
         (FirstCard,SecondCard)=GiveCards(listCardsStart);
         Bot bot2=new Bot(randomLevel.Next(1,4))
         {
-            Name="bot1",
+            Name="bot2",
             Deck = [
                 FirstCard,
                 SecondCard
@@ -29,14 +29,16 @@ public class GameEngine
         (FirstCard,SecondCard)=GiveCards(listCardsStart);
         Bot bot3=new Bot(randomLevel.Next(1,4))
         {
-            Name="bot1",
+            Name="bot3",
             Deck = [
                 FirstCard,
                 SecondCard
             ]
         };
+        
         foreach(Player player in players)
         {
+            (FirstCard,SecondCard)=GiveCards(listCardsStart);
             player.Deck = [
                 FirstCard,
                 SecondCard
@@ -45,10 +47,14 @@ public class GameEngine
         bots.Add(bot1);
         bots.Add(bot2);
         bots.Add(bot3);
+        Console.WriteLine("\nCommencement de la partie.");
+        foreach(Bot bot in bots)
+        {
+            Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
+        }
     }
     public (Card,Card) GiveCards(List<Card> listCards)
     {
-
         var FirstCard=listCards[0];
         listCards.RemoveAt(0);
         var SecondCard=listCards[0];
