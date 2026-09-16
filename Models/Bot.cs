@@ -14,11 +14,11 @@ public class Bot : Player
                 throw new ArgumentOutOfRangeException("Le niveau du bot doit être entre 1 et 3 compris");
         }
     }
-    public void BotAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin)
+    public void BotAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin,ref int  mainPot)
     {
         
         int amountBet=DeclarationOfAction( level, highestValue, combinationStart, maxCoin);
-        // Bet();
+        Bet(ref mainPot,amountBet);
     }
     public bool Bluff(int level)
     {
