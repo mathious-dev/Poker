@@ -50,8 +50,8 @@ public class Gestion
             Name="Math",
             Deck=new Card[]
             {
-                new Card { Number = 13, Type = TypeCard.Coeur },
-                new Card { Number = 14, Type = TypeCard.Coeur }
+                new Card { Number = 10, Type = TypeCard.Coeur },
+                new Card { Number = 8, Type = TypeCard.Coeur }
             }
 
         };
@@ -60,8 +60,8 @@ public class Gestion
             Name="François",
             Deck=new Card[]
             {
-                new Card { Number = 13, Type = TypeCard.Coeur },
-                new Card { Number = 14, Type = TypeCard.Coeur }
+                new Card { Number = 10, Type = TypeCard.Coeur },
+                new Card { Number = 12, Type = TypeCard.Coeur }
             }
         };
         var player3=new Player()
@@ -78,17 +78,18 @@ public class Gestion
         listPlayers.Add(player3);
         var listCard=new List<Card>()
         {
-            new Card { Number = 1, Type = TypeCard.Pique },
+            new Card { Number = 10, Type = TypeCard.Pique },
             new Card { Number = 4, Type = TypeCard.Trefle },
             new Card { Number = 10, Type = TypeCard.Coeur },
-            new Card { Number = 11, Type = TypeCard.Coeur },
-            new Card { Number = 12, Type = TypeCard.Coeur }
+            new Card { Number = 12, Type = TypeCard.Coeur },
+            new Card { Number = 8, Type = TypeCard.Coeur }
         };
         // (listGagnant,winner)=Rule.RulePair(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleFollow(listPlayers,listCard);
         // (listGagnant,winner)=Rule.RuleFollowFlush(listPlayers,listCard);
-        (listGagnant,winner)=Rule.RuleFollowRoyalFlush(listPlayers,listCard);
+        // (listGagnant,winner)=Rule.RuleFollowRoyalFlush(listPlayers,listCard);
+        (listGagnant,winner)=Rule.RuleFull(listPlayers,listCard);
         Console.WriteLine($"le gagnant est : {winner.Name}");
         if(listGagnant !=null)
         {

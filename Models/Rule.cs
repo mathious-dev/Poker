@@ -132,14 +132,35 @@ public class Rule
     {
         var winners=new List<Player>();
         var winner=new Player();
-        int highestValue=0;
+        int highestValueTriple=0;
+        int highestValuePair=0;
         foreach(var player in players)
         {
             var allCards=GroupCards(player.Deck,cardPlace);
-            var listFulldouble=SearchPairOrThreeSameOrFourSame(allCards,2);
+            var listFullPair=SearchPairOrThreeSameOrFourSame(allCards,2);
             var listFullTriple=SearchPairOrThreeSameOrFourSame(allCards,3);
-            ConditionHighestValueAndWinners(listFulldouble,ref highestValue,winners,ref winner,player);
-            ConditionHighestValueAndWinners(listFullTriple,ref highestValue,winners,ref winner,player);
+            if(listFullPair.Any()&&listFullTriple.Any())
+            {
+                if(listFullTriple.First()>highestValueTriple)
+                {
+                    highestValueTriple=listFullTriple.First();
+                    highestValuePair=listFullPair.First();
+                    winner=player;
+                    winners.Clear();
+                }
+                else if(listFullTriple.First()==highestValueTriple)
+                {
+                    if(listFullPair.First()>highestValuePair)
+                    {
+                        highestValuePair=listFullPair.First();
+                        winner=player;
+                        winners.Clear();
+                    }
+                    else if(listFullPair.First()==highestValuePair)
+                        winners.Add(player);
+                }
+            }
+                
         }
          return (winners,winner);
     }
