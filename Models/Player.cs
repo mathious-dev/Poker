@@ -2,6 +2,7 @@
 
 public class Player
 {
+    //ajouter la mise temporaire
     public string Name{get;set;}
     public  int Coin{get;set;}=1000;
     public Card[]? Deck{get;set;}=new Card[2];
@@ -15,6 +16,17 @@ public class Player
     {
         allPlayers.Remove(this);
         Console.WriteLine($"\nLe joueur {this.Name} s'est couché");
+    }
+    public void UserCheckCard()
+    {
+        Console.WriteLine($"\nVos cartes sont ");
+        foreach(Card card in this.Deck)
+        {
+            if(card.Number>10)
+                Console.WriteLine($"\n{(FaceCard)card.Number} de {card.Type}");
+            else
+                Console.WriteLine($"\n{card.Number} de {card.Type}");
+        }
     }
     
 }

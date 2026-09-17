@@ -44,7 +44,7 @@ public class Card
         }
         return listCards;
     }
-    public static void showCards(IEnumerable<Card> cards)
+    public static void ShowCards(IEnumerable<Card> cards)
     {
         if(cards.Any())
         {
@@ -68,6 +68,10 @@ public class Card
                     Console.WriteLine($"\n{card.Number} de {card.Type}");
             }
         }
+        
+    }
+    public void ShowAllInformationsOfTheRound(List<Player>players)
+    {
         
     }
 }

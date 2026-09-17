@@ -65,7 +65,7 @@ public class Gestion
         {
             Name="Math",
             Deck=[
-                new (6) {  Type = TypeCard.Coeur },
+                new (11) {  Type = TypeCard.Coeur },
                 new (2) { Type = TypeCard.Coeur }
             ]
 
@@ -114,6 +114,7 @@ public class Gestion
                 Console.WriteLine($"{gagnant.Name}");
             }
         }
+        player1.UserCheckCard();
     }
     public static int IntEnter()
     {

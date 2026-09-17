@@ -59,7 +59,7 @@ public class GameEngine
     public void ChoiceUser(ref int minBet,ref int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
         int choice=0;
-        string[] tab={"Miser","Se coucher","Regarder vos cartes","Consulter votre pot","Arrêter le jeu"};
+        string[] tab={"Miser","Se coucher","Regarder vos cartes","Consulter votre pot","Voir les jetons des autres joueurs et le pot principal","Arrêter le jeu"};
         while(choice!=1&&choice!=2&&choice!=4)
         {
             foreach(string sentenceChoice in tab)
@@ -73,7 +73,7 @@ public class GameEngine
             {
                 case 1:UserBet(ref minBet,ref mainPot,humanPlayer);break;
                 case 2:humanPlayer.PlayerSleep(allPlayersInGame);break;
-                case 3:UserCheckCard();break;
+                case 3:humanPlayer.UserCheckCard();break;
                 case 4:Console.WriteLine($"\n{humanPlayer.Coin}");break;
                 case 5:Console.WriteLine("\nFin du jeu");;break;
             }
@@ -81,6 +81,7 @@ public class GameEngine
     }
     public void UserBet(ref int minBet,ref int mainPot,Player humanPlayer)
     {
+        //faire attention si on annule il peut y avoir une erreur
         bool finish=false;
         int montant;
         int stop=0;
@@ -104,10 +105,6 @@ public class GameEngine
                 finish=true;
             }
         }
-    }
-    public void UserCheckCard()
-    {
-        
     }
     public (List<Player>?,Player,string) WhoWin(List<Bot>bots,List<Player> players,List<Card> mainCards)
     {
