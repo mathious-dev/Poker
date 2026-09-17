@@ -29,7 +29,7 @@ public class Bot : Player
         int combinationNumber=0;
         int highestValue=0;
         var allCards=new List<Card>();
-        if(cardsOnTable.Any())
+        if(cardsOnTable!=null&& cardsOnTable.Any())
             allCards=Rule.GroupCards(cardsOfBot,cardsOnTable);
         else
             allCards.AddRange(cardsOfBot);
@@ -40,7 +40,6 @@ public class Bot : Player
     }
     public (int,int) TestAllCombinationForBot(List<Card> cards)
     {
-        int combination=0;
         var royalFlush=Rule.GroupCardByFollowRoyalFlush(cards);//ok
         if(royalFlush.Any())
             return ((int)Rule.RuleEnum.RoyalFlush,royalFlush.First());
@@ -53,9 +52,10 @@ public class Bot : Player
         if(square.Any())
             return((int)Rule.RuleEnum.Square,square.First());
 
-        var full=Rule.GroupCardByFollowRoyalFlush(cards);
-        if(full.Any())
-            return((int)Rule.RuleEnum.Full,full.First());
+        var pair=Rule.SearchPairOrThreeSameOrFourSame(cards,2);//ok
+        var triple=Rule.SearchPairOrThreeSameOrFourSame(cards,3);
+        if(triple.Any()&&pair.Any(p=>p!=triple.First())) //il faut bien vérifier que c'est différent sinon dès qu'on a brelan, il trouvera aussi une paire donc un faux full
+            return((int)Rule.RuleEnum.Full,triple.First());
 
         var color=Rule.GroupCardByColor(cards);//ok
         if(color.Any())
@@ -65,21 +65,17 @@ public class Bot : Player
         if(follow.Any())
             return((int)Rule.RuleEnum.Follow,follow.First());
 
-        var threeSameKind=Rule.SearchPairOrThreeSameOrFourSame(cards,2);//ok
-        if(threeSameKind.Any())
-            return((int)Rule.RuleEnum.ThreeSameKind,threeSameKind.First());
+        if(triple.Any())//ok
+            return((int)Rule.RuleEnum.ThreeSameKind,triple.First());
 
-        //changer un peu
-        var doublePair=Rule.SearchPairOrThreeSameOrFourSame(cards,2);
-        if(doublePair.Any())
-            return((int)Rule.RuleEnum.DoublePair,doublePair.First());
+        if(pair.Count()>=2) //ok
+            return((int)Rule.RuleEnum.DoublePair,pair.First());
 
-        var pair=Rule.SearchPairOrThreeSameOrFourSame(cards,2);//ok
-        if(pair.Any())
+        if(pair.Any())//ok
             return((int)Rule.RuleEnum.Pair,pair.First());
 
-        var highCard=Rule.GroupCardByFollowRoyalFlush(cards);//ok
-        return((int)Rule.RuleEnum.HighCard,highCard.First());
+        var highCard=cards.Max(c=>c.Number);//ok
+        return((int)Rule.RuleEnum.HighCard,highCard);
 
     }
     public  bool Bluff(int level)
@@ -289,7 +285,10 @@ public class Bot : Player
                 case 2 : BotLevelMiddle(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax, minBetOnTable);break;
                 case 3 : BotLevelHard(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax, minBetOnTable);break;
             }
-            amountBet=randomBet.Next(betMin,betMax);
+            if (betMin >= betMax) 
+                amountBet = betMin; 
+            else
+                amountBet = randomBet.Next(betMin, betMax + 1); //+1 pour inclure le betMax
         }
         else
             amountBet=maxCoin;
