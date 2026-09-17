@@ -2,13 +2,14 @@
 
 public class Player
 {
-    //ajouter la mise temporaire
     public string Name{get;set;}
-    public  int Coin{get;set;}=1000;
+    public int Coin{get;set;}=1000;
+    public int BetOfTheRound{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
     public void Bet(ref int mainPot,int AmountBet)
     {
         mainPot+=AmountBet;
+        BetOfTheRound+=AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
         Coin-=AmountBet;
     }
@@ -28,5 +29,12 @@ public class Player
                 Console.WriteLine($"\n{card.Number} de {card.Type}");
         }
     }
-    
+    public void EmptyTemporaryBet()
+    {
+        this.BetOfTheRound=0;
+    }
+    public void CheckBet()
+    {
+        Console.WriteLine($"\nVotre mise : {this.BetOfTheRound}");
+    }
 }

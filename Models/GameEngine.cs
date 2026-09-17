@@ -59,7 +59,7 @@ public class GameEngine
     public void ChoiceUser(ref int minBet,ref int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
         int choice=0;
-        string[] tab={"Miser","Se coucher","Regarder vos cartes","Consulter votre pot","Voir les jetons des autres joueurs et le pot principal","Arrêter le jeu"};
+        string[] tab={"Miser","Se coucher","Consulter vos informations","Voir les informations principales","Arrêter le jeu"};
         while(choice!=1&&choice!=2&&choice!=4)
         {
             foreach(string sentenceChoice in tab)
@@ -73,9 +73,19 @@ public class GameEngine
             {
                 case 1:UserBet(ref minBet,ref mainPot,humanPlayer);break;
                 case 2:humanPlayer.PlayerSleep(allPlayersInGame);break;
-                case 3:humanPlayer.UserCheckCard();break;
-                case 4:Console.WriteLine($"\n{humanPlayer.Coin}");break;
-                case 5:Console.WriteLine("\nFin du jeu");;break;
+                case 3:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
+                case 4:
+                foreach(Player player in allPlayersInGame)
+                {
+                    if(player.BetOfTheRound>0)
+                        Console.WriteLine($"\n joueur {player.Name} a misé {player.BetOfTheRound}");
+                    else
+                        Console.WriteLine($"\n joueur {player.Name} est couché");
+                }
+                Console.WriteLine($"\nLe pot principal est de {mainPot} et la mise minimal est de {minBet}");
+                break;
+                case 5:Console.WriteLine("\nFin du jeu");break;
+                
             }
         }
     }
