@@ -18,10 +18,10 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public void BotAction(int highestValue,ref int  mainPot,int minBet)
+    public void BotAction(int highestValue,ref int  mainPot,int minBetOnTable)
     {
         int combinationStart=EvaluateDeck(this.Deck);
-        int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBet);
+        int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);
         Bet(ref mainPot,amountBet);
     }
     public int EvaluateDeck(Card[] cards)
@@ -50,101 +50,175 @@ public class Bot : Player
         else
             bluff=false;
     }
-    
-    //il faudra définir en fonction de la mise obligatoire aussi
-    public  void BotLevelEasy(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
+    public  void BotLevelEasy(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax,int minBetOnTable)
     {
-        switch((combinationInt,highestValue))
-        {
-            case(1,>10):
-            betMin=(int)(maxCoin*0.30);
-            betMax=(int)(maxCoin*1);
-            break;
-            case(1,<6):
-            betMin=(int)(maxCoin*0.20);
-            betMax=(int)(maxCoin*0.40);
-            break;
-            case(2,<9):
-            betMin=(int)(maxCoin*0.60);
-            betMax=(int)(maxCoin*0.90);
-            break;
-            case(<3,>9):
-            betMin=(int)(maxCoin*0.70);
-            betMax=(int)(maxCoin*0.90);
-            break;
-            case(>3,>2):
-            betMin=(int)(maxCoin*1);
-            betMax=(int)(maxCoin*1);
-            break;
-            case(<14,>2):
-            betMin=(int)(maxCoin*1);
-            betMax=(int)(maxCoin*1);
-            break;
-            default:
-            betMin=0;
-            betMax=0;
-            ;break;
-        }
-    }
-    //définir chance
-    public  void BotLevelMiddle(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
+        switch (combinationInt)
     {
-        switch((combinationInt,highestValue))
-        {
-            case(1,>10):
-            betMin=(int)(maxCoin*0.30);
-            betMax=(int)(maxCoin*1);
+        case 1: // Carte Haute
+            if (highestValue >= 12) // Dame, Roi, As (Grosse carte haute)
+            {
+                if (minBetOnTable > maxCoin * 0.30) { betMin = 0; betMax = 0; } // Se couche si il n'a rien
+                else { betMin = minBetOnTable; betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.20)); } 
+            }
+            else // Petite carte haute (Rien du tout)
+            {
+                if (minBetOnTable > maxCoin * 0.10) { betMin = 0; betMax = 0; }
+                else { betMin = minBetOnTable; betMax = minBetOnTable; }
+            }
             break;
-            case(2,<9):
-            betMin=(int)(maxCoin*0.60);
-            betMax=(int)(maxCoin*0.90);
+
+        case 2: // Paire
+            if (highestValue >= 10) // Paire de 10 ou mieux
+            {
+                betMin = minBetOnTable;
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.50)); // S'emballe vite
+            }
+            else // Petite paire (2 à 9)
+            {
+                betMin = minBetOnTable;
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.25));
+            }
             break;
-            case(<3,>9):
-            betMin=(int)(maxCoin*0.70);
-            betMax=(int)(maxCoin*0.90);
-            ;break;
-            case(>3,>2):
-            betMin=(int)(maxCoin*1);
-            betMax=(int)(maxCoin*1);
+
+        case 3: // Double Paire
+            if (highestValue >= 11) // Avec au moins un Valet
+            {
+                betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.20));
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.80)); // Presque tapis
+            }
+            else // Petites doubles paires
+            {
+                betMin = minBetOnTable;
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.40));
+            }
             break;
-            default:
-            betMin=0;
-            betMax=0;
-            ;break;
-        }
+
+        default: // Brelan et plus (>= 4)
+            betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.30));
+            betMax = maxCoin; // All-in facile
+            break;
     }
-    //définir chance
-    public  void BotLevelHard(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax)
+    }
+    public  void BotLevelMiddle(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax,int minBetOnTable)
     {
-        switch((combinationInt,highestValue))
-        {
-            case(1,>10):
-            betMin=(int)(maxCoin*0.30);
-            betMax=(int)(maxCoin*1);
+        switch (combinationInt)
+    {
+        case 1: // Carte Haute
+            if (highestValue >= 13) // Roi ou As (Peut valoir le coup de voir le flop)
+            {
+                if (minBetOnTable > maxCoin * 0.10) { betMin = 0; betMax = 0; } // Mais pas trop cher
+                else { betMin = minBetOnTable; betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.05)); }
+            }
+            else // Moins qu'un Roi sans combinaison -> Poubelle face à une mise
+            {
+                if (minBetOnTable > 0) { betMin = 0; betMax = 0; }
+                else { betMin = 0; betMax = 0; } 
+            }
             break;
-            case(1,<6):
-            betMin=(int)(maxCoin*0.20);
-            betMax=(int)(maxCoin*0.40);
+
+        case 2: // Paire
+            if (highestValue >= 11) // Top Paire (Valet, Dame, Roi, As)
+            {
+                if (minBetOnTable > maxCoin * 0.30) { betMin = 0; betMax = 0; } // Lâche si on lui demande plus de 30%
+                else { betMin = minBetOnTable; betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.25)); }
+            }
+            else // Petite Paire (2 à 10)
+            {
+                if (minBetOnTable > maxCoin * 0.15) { betMin = 0; betMax = 0; } // Lâche plus vite
+                else { betMin = minBetOnTable; betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.15)); }
+            }
             break;
-            case(2,<9):
-            betMin=(int)(maxCoin*0.60);
-            betMax=(int)(maxCoin*0.90);
+
+        case 3: // Double Paire
+            if (highestValue >= 11) // Grosse double paire
+            {
+                betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.15));
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.40));
+            }
+            else // Petite double paire
+            {
+                betMin = minBetOnTable;
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.25));
+            }
             break;
-            case(<3,>9):
-            betMin=(int)(maxCoin*0.70);
-            betMax=(int)(maxCoin*0.90);
+
+        default: // Brelan, Suite, Couleur... (>= 4)
+            if (highestValue >= 10) // Brelan de 10+ ou grosse suite
+            {
+                betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.40));
+                betMax = maxCoin; 
+            }
+            else // Petit brelan
+            {
+                betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.20));
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.60));
+            }
             break;
-            case(>3,>2):
-            betMin=(int)(maxCoin*1);
-            betMax=(int)(maxCoin*1);
-            break;
-            default:
-            betMin=0;
-            betMax=0;
-            ;break;
-        }
     }
-    public  int DeclarationOfAction(int level,int highestValue,int combinationStart,int maxCoin,int minBet)
+    }
+    public  void BotLevelHard(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax,int minBetOnTable)
+    {
+        switch (combinationInt)
+    {
+        case 1: // Carte Haute
+            if (highestValue == 14) // As uniquement
+            {
+                if (minBetOnTable > maxCoin * 0.05) { betMin = 0; betMax = 0; } // Paie juste pour voir si c'est quasi gratuit
+                else { betMin = minBetOnTable; betMax = minBetOnTable; } 
+            }
+            else 
+            {
+                if (minBetOnTable > 0) { betMin = 0; betMax = 0; } // Fold instantané
+                else { betMin = 0; betMax = 0; }
+            }
+            break;
+
+        case 2: // Paire
+            if (highestValue >= 12) // Paire de Dame, Roi ou As
+            {
+                if (minBetOnTable > maxCoin * 0.25) { betMin = 0; betMax = 0; } // Pot Control : ne s'enflamme pas avec une seule paire
+                else { betMin = minBetOnTable; betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.30)); } // Relance pour faire payer les autres
+            }
+            else // Paire moyenne/faible
+            {
+                if (minBetOnTable > maxCoin * 0.10) { betMin = 0; betMax = 0; } // Fold facile
+                else { betMin = minBetOnTable; betMax = minBetOnTable; } // Just call
+            }
+            break;
+
+        case 3: // Double Paire
+            if (highestValue >= 12) // Top Double Paire
+            {
+                // Value bet : il relance fort pour rentabiliser
+                betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.25));
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.50));
+            }
+            else
+            {
+                // Prudent face à une relance adverse qui pourrait cacher un brelan
+                if (minBetOnTable > maxCoin * 0.40) { betMin = 0; betMax = 0; } 
+                else { betMin = minBetOnTable; betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.30)); }
+            }
+            break;
+
+        default: // Monstre (Combinaison 4 et plus)
+            if (highestValue >= 10) 
+            {
+                // Grosse carte haute + Gros jeu = Relance massive / Tapis
+                int strongRaise = Math.Max(minBetOnTable * 2, (int)(maxCoin * 0.50));
+                betMin = strongRaise > maxCoin ? maxCoin : strongRaise; 
+                betMax = maxCoin; 
+            }
+            else
+            {
+                // Jeu monstre mais avec petites cartes (ex: Brelan de 2) -> Fait un peu plus attention
+                betMin = Math.Max(minBetOnTable, (int)(maxCoin * 0.30));
+                betMax = Math.Max(minBetOnTable, (int)(maxCoin * 0.70));
+            }
+            break;
+    }
+    }
+    public  int DeclarationOfAction(int level,int highestValue,int combinationStart,int maxCoin,int minBetOnTable)
     {
         int amountBet=0;
         int betMin=0;
@@ -157,9 +231,9 @@ public class Bot : Player
         {
             switch(level)
             {
-                case 1 : BotLevelEasy(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax);break;
-                case 2 : BotLevelMiddle(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax);break;
-                case 3 : BotLevelHard(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax);break;
+                case 1 : BotLevelEasy(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax, minBetOnTable);break;
+                case 2 : BotLevelMiddle(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax, minBetOnTable);break;
+                case 3 : BotLevelHard(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax, minBetOnTable);break;
             }
             amountBet=randomBet.Next(betMin,betMax);
         }
