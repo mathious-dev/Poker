@@ -54,12 +54,12 @@ public class GameEngine
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
         }
     }
-    public void Round(List<Bot>bots,List<Player> players,int minBet,int mainPot)
+    public void Round(List<Bot>bots,List<Player> players,int minBet,ref int mainPot,List<Card>?cardsOnTable)
     {
         
         foreach(Bot bot in bots)
         {
-            bot.BotAction(bot.Level,);//appliquer avant au bot les combinaisons pour qu'il sache quoi faire
+            bot.BotAction(ref mainPot,minBet,cardsOnTable);
         }
     }
     public (List<Player>?,Player,string) WhoWin(List<Bot>bots,List<Player> players,List<Card> mainCards)

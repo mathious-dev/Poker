@@ -224,7 +224,7 @@ public class Rule
     }
     public static List<int> GroupCardByFollow(List<Card> cards)
     {
-        //faire la vérification de l'As qui peut être avec 2 ou un roi
+
         var listCardFollow=cards.Select(c=>c.Number)
                                 .Distinct()
                                 .OrderByDescending(c=>c)
@@ -234,7 +234,7 @@ public class Rule
     }
     public static List<int> GroupCardByFollowFlush(List<Card> cards)
     {
-        //faire la vérification de l'As qui peut être avec 2 ou un roi
+
         var listCardFollowFlush=GroupCardByColor(cards);
         if(listCardFollowFlush.Any())
             listCardFollowFlush=IsFollow(listCardFollowFlush);

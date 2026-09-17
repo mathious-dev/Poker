@@ -18,15 +18,69 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public void BotAction(int highestValue,ref int  mainPot,int minBetOnTable)
+    public void BotAction(ref int  mainPot,int minBetOnTable,List<Card>?cards)
     {
-        int combinationStart=EvaluateDeck(this.Deck);
+        var (combinationStart,highestValue)=EvaluateDeck(this.Deck,cards);
         int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);
         Bet(ref mainPot,amountBet);
     }
-    public int EvaluateDeck(Card[] cards)
+    public (int,int) EvaluateDeck(Card[] cardsOfBot,List<Card>?cardsOnTable)
     {
-        
+        int combinationNumber=0;
+        int highestValue=0;
+        var allCards=new List<Card>();
+        if(cardsOnTable.Any())
+            allCards=Rule.GroupCards(cardsOfBot,cardsOnTable);
+        else
+            allCards.AddRange(cardsOfBot);
+        (combinationNumber,highestValue)=TestAllCombinationForBot(allCards);
+        return (combinationNumber,highestValue);
+       
+
+    }
+    public (int,int) TestAllCombinationForBot(List<Card> cards)
+    {
+        int combination=0;
+        var royalFlush=Rule.GroupCardByFollowRoyalFlush(cards);//ok
+        if(royalFlush.Any())
+            return ((int)Rule.RuleEnum.RoyalFlush,royalFlush.First());
+
+        var followFlush=Rule.GroupCardByFollowFlush(cards);//ok
+        if(followFlush.Any())
+            return((int)Rule.RuleEnum.FollowFlush,followFlush.First());
+
+        var square=Rule.SearchPairOrThreeSameOrFourSame(cards,4);//ok
+        if(square.Any())
+            return((int)Rule.RuleEnum.Square,square.First());
+
+        var full=Rule.GroupCardByFollowRoyalFlush(cards);
+        if(full.Any())
+            return((int)Rule.RuleEnum.Full,full.First());
+
+        var color=Rule.GroupCardByColor(cards);//ok
+        if(color.Any())
+            return((int)Rule.RuleEnum.Color,color.First());
+
+        var follow=Rule.GroupCardByFollow(cards);//ok
+        if(follow.Any())
+            return((int)Rule.RuleEnum.Follow,follow.First());
+
+        var threeSameKind=Rule.SearchPairOrThreeSameOrFourSame(cards,2);//ok
+        if(threeSameKind.Any())
+            return((int)Rule.RuleEnum.ThreeSameKind,threeSameKind.First());
+
+        //changer un peu
+        var doublePair=Rule.SearchPairOrThreeSameOrFourSame(cards,2);
+        if(doublePair.Any())
+            return((int)Rule.RuleEnum.DoublePair,doublePair.First());
+
+        var pair=Rule.SearchPairOrThreeSameOrFourSame(cards,2);//ok
+        if(pair.Any())
+            return((int)Rule.RuleEnum.Pair,pair.First());
+
+        var highCard=Rule.GroupCardByFollowRoyalFlush(cards);//ok
+        return((int)Rule.RuleEnum.HighCard,highCard.First());
+
     }
     public  bool Bluff(int level)
     {
