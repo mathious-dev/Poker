@@ -23,29 +23,44 @@ public class GameEngine
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
         }
     }
-    public void Round(List<Bot>bots,Player humanPlayer,int minBet,List<Card>?cardsOnTable)
+    public void Round(List<Bot>bots,Player humanPlayer,int minBet)
     {
         Random randomCard=new Random();
-        var listCardsStart=new List<Card>();
+        var listCards=new List<Card>();
+        var listCardsOnTable=new List<Card>();
         int handTour=1;
         int mainPot=0;
         var allPlayers=new List<Player>();
         allPlayers.Add(humanPlayer);
         allPlayers.AddRange(bots);
-        listCardsStart=Card.GeneralDeckCard();
-        listCardsStart=listCardsStart.OrderBy(c=>randomCard.Next()).ToList();
+        listCards=Card.GeneralDeckCard();
+        listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
         foreach(Player player in allPlayers)
         {
-            var (FirstCard,SecondCard)=GiveCards(listCardsStart);
+            var (FirstCard,SecondCard)=GiveCardsStart(listCards);
             player.Deck=[FirstCard,SecondCard];
         }
         while(handTour<5 ||allPlayers.Count()>1)
         {
+            Console.WriteLine($"\nTour {handTour}");
+            if(handTour==2)
+            {
+                for(int i=0;i<3;i++)
+                {
+                    var card=GiveCard(listCards);
+                    listCardsOnTable.Add(card);
+                }
+            }
+            else if(handTour>2)
+            {
+                var card=GiveCard(listCards);
+                listCardsOnTable.Add(card);
+            }
             foreach(Player player in allPlayers)
             {
                 if(player is Bot bot)
                 {
-                    int betFromBot=bot.BotAction(ref mainPot,ref minBet,cardsOnTable);
+                    int betFromBot=bot.BotAction(ref mainPot,ref minBet,null);
                     if(betFromBot<minBet||betFromBot==0)
                         bot.PlayerSleep(allPlayers);   
                 }
@@ -53,6 +68,7 @@ public class GameEngine
             }
             Console.Write("\n Que voulez-vous faire?");
             ChoiceUser(ref minBet,ref mainPot,allPlayers,humanPlayer);
+            handTour++;
         }
         
     }
@@ -163,12 +179,18 @@ public class GameEngine
         (winners,winner,combination)=Rule.RuleHightCard(allPlayers);
         return (winners,winner,combination);
     }
-    public (Card,Card) GiveCards(List<Card> listCards)
+    public (Card,Card) GiveCardsStart(List<Card> listCards)
     {
         var FirstCard=listCards[0];
         listCards.RemoveAt(0);
         var SecondCard=listCards[0];
         listCards.RemoveAt(0);
         return (FirstCard,SecondCard);
+    }
+    public Card GiveCard(List<Card> listCards)
+    {
+        var card=listCards[0];
+        listCards.RemoveAt(0);
+        return card;
     }
 }

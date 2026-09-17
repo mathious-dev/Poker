@@ -40,8 +40,6 @@ public class Bot : Player
             allCards.AddRange(cardsOfBot);
         (combinationNumber,highestValue)=TestAllCombinationForBot(allCards);
         return (combinationNumber,highestValue);
-       
-
     }
     public (int,int) TestAllCombinationForBot(List<Card> cards)
     {
