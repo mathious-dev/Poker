@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Poker.Models;
 public class Gestion
 {
-    List<Player> players=new List<Player>();
+    Player player=new Player();
     List<Bot> bots=new List<Bot>();
     
     public Gestion()
@@ -38,22 +38,22 @@ public class Gestion
     {
         int minBet=50;
         int mainPot=0;
-        var player=new Player();
-        players.Add(player);
+        var newPlayer=new Player();
+
         string name=null;
         while(string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("\nQuelle est votre nom? ");
             name=Console.ReadLine();
         }
-        player.Name=name;
+        newPlayer.Name=name;
         var gameEngine=new GameEngine();
-        gameEngine.Init(bots,players);
-        Card.showCards(player.Deck);
-        while(bots.Count()+players.Count==1)
-        {
-            gameEngine.Round(bots,players,minBet,mainPot);
-        }
+        gameEngine.Init(bots);
+        // Card.showCards(player.Deck);
+        // while(bots.Count()+players.Count==1)
+        // {
+        //     gameEngine.Hand(bots,players,minBet,mainPot);//quand tous les tours sont finis
+        // }
     }
     public void Test()
     {
@@ -115,7 +115,7 @@ public class Gestion
             }
         }
     }
-    public int IntEnter()
+    public static int IntEnter()
     {
         int intChoice;
         string choice=Console.ReadLine();

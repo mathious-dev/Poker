@@ -8,7 +8,13 @@ public class Player
     public void Bet(ref int mainPot,int AmountBet)
     {
         mainPot+=AmountBet;
+        Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
         Coin-=AmountBet;
+    }
+    public void PlayerSleep(List<Player>allPlayers)
+    {
+        allPlayers.Remove(this);
+        Console.WriteLine($"\nLe joueur {this.Name} s'est couché");
     }
     
 }

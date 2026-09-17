@@ -1,50 +1,19 @@
-﻿namespace Poker.Models;
+﻿using System.Diagnostics;
+
+namespace Poker.Models;
 
 public class GameEngine
 {
-    List<Card>listCardsStart=Card.GeneralDeckCard();
-    int countRound=1;
-    public void Init(List<Bot>bots, List<Player> players)
+    
+    public void Init(List<Bot>bots)
     {
         Random randomLevel=new Random();
-        Random randomCard=new Random();
-        listCardsStart=listCardsStart.OrderBy(c=>randomCard.Next()).ToList();
-        (var FirstCard,var SecondCard)=GiveCards(listCardsStart);
         Bot bot1=new Bot(randomLevel.Next(1,4))
-        {
-            Name="bot1",
-            Deck = [
-                FirstCard,
-                SecondCard
-            ]
-        };
-        (FirstCard,SecondCard)=GiveCards(listCardsStart);
+        {Name="bot1",};
         Bot bot2=new Bot(randomLevel.Next(1,4))
-        {
-            Name="bot2",
-            Deck = [
-                FirstCard,
-                SecondCard
-            ]
-        };
-        (FirstCard,SecondCard)=GiveCards(listCardsStart);
+        {Name="bot2",  };
         Bot bot3=new Bot(randomLevel.Next(1,4))
-        {
-            Name="bot3",
-            Deck = [
-                FirstCard,
-                SecondCard
-            ]
-        };
-        
-        foreach(Player player in players)
-        {
-            (FirstCard,SecondCard)=GiveCards(listCardsStart);
-            player.Deck = [
-                FirstCard,
-                SecondCard
-            ];
-        }
+        { Name="bot3",};
         bots.Add(bot1);
         bots.Add(bot2);
         bots.Add(bot3);
@@ -54,13 +23,91 @@ public class GameEngine
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
         }
     }
-    public void Round(List<Bot>bots,List<Player> players,int minBet,ref int mainPot,List<Card>?cardsOnTable)
+    public void Round(List<Bot>bots,Player humanPlayer,int minBet,List<Card>?cardsOnTable)
+    {
+        Random randomCard=new Random();
+        var listCardsStart=new List<Card>();
+        int handTour=1;
+        int mainPot=0;
+        var allPlayers=new List<Player>();
+        allPlayers.Add(humanPlayer);
+        allPlayers.AddRange(bots);
+        listCardsStart=Card.GeneralDeckCard();
+        listCardsStart=listCardsStart.OrderBy(c=>randomCard.Next()).ToList();
+        foreach(Player player in allPlayers)
+        {
+            var (FirstCard,SecondCard)=GiveCards(listCardsStart);
+            player.Deck=[FirstCard,SecondCard];
+        }
+        while(handTour<5 ||allPlayers.Count()>1)
+        {
+            foreach(Player player in allPlayers)
+            {
+                if(player is Bot bot)
+                {
+                    int betFromBot=bot.BotAction(ref mainPot,ref minBet,cardsOnTable);
+                    if(betFromBot<minBet||betFromBot==0)
+                        bot.PlayerSleep(allPlayers);   
+                }
+                
+            }
+            Console.Write("\n Que voulez-vous faire?");
+            ChoiceUser(ref minBet,ref mainPot,allPlayers,humanPlayer);
+        }
+        
+    }
+    public void ChoiceUser(ref int minBet,ref int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
+    {
+        int choice=0;
+        string[] tab={"Miser","Se coucher","Regarder vos cartes","Consulter votre pot","Arrêter le jeu"};
+        while(choice!=1&&choice!=2&&choice!=4)
+        {
+            foreach(string sentenceChoice in tab)
+            {
+                int i=1;
+                Console.WriteLine($"\n{i}.{sentenceChoice}");
+                i++;
+            }
+            choice=Gestion.IntEnter();
+            switch(choice)
+            {
+                case 1:UserBet(ref minBet,ref mainPot,humanPlayer);break;
+                case 2:humanPlayer.PlayerSleep(allPlayersInGame);break;
+                case 3:UserCheckCard();break;
+                case 4:Console.WriteLine($"\n{humanPlayer.Coin}");break;
+                case 5:Console.WriteLine("\nFin du jeu");;break;
+            }
+        }
+    }
+    public void UserBet(ref int minBet,ref int mainPot,Player humanPlayer)
+    {
+        bool finish=false;
+        int montant;
+        int stop=0;
+        Console.WriteLine("\nEntrez le montant a miser");
+        while(!finish)
+        {
+            montant=Gestion.IntEnter();
+            if(montant<minBet)
+            {
+                Console.WriteLine($"\nVous devez misez plus ou égal que {minBet} !");
+                while(stop!=1&&stop!=2)
+                {
+                    Console.WriteLine("\nAnnuler?\n 1.OUI\n2.NON");
+                    stop=Gestion.IntEnter();
+                }
+            }
+            else
+            {
+                humanPlayer.Bet(ref mainPot,montant);
+                Console.WriteLine($"\nVotre pot est de {humanPlayer.Coin}");
+                finish=true;
+            }
+        }
+    }
+    public void UserCheckCard()
     {
         
-        foreach(Bot bot in bots)
-        {
-            bot.BotAction(ref mainPot,minBet,cardsOnTable);
-        }
     }
     public (List<Player>?,Player,string) WhoWin(List<Bot>bots,List<Player> players,List<Card> mainCards)
     {

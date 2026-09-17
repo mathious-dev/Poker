@@ -18,11 +18,16 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public void BotAction(ref int  mainPot,int minBetOnTable,List<Card>?cards)
+    public int BotAction(ref int  mainPot,ref int minBetOnTable,List<Card>?cards)
     {
         var (combinationStart,highestValue)=EvaluateDeck(this.Deck,cards);
         int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);
-        Bet(ref mainPot,amountBet);
+        if(amountBet>minBetOnTable)
+        {
+            minBetOnTable=amountBet;
+            Bet(ref mainPot,amountBet);
+        }
+        return amountBet;
     }
     public (int,int) EvaluateDeck(Card[] cardsOfBot,List<Card>?cardsOnTable)
     {
