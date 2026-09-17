@@ -23,22 +23,24 @@ public class GameEngine
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
         }
     }
-    public void Round(List<Bot>bots,Player humanPlayer,int minBet)
+    public void Round(List<Player>allPlayers,int minBet)
     {
         Random randomCard=new Random();
         var listCards=new List<Card>();
         var listCardsOnTable=new List<Card>();
         int handTour=1;
         int mainPot=0;
-        var allPlayers=new List<Player>();
-        allPlayers.Add(humanPlayer);
-        allPlayers.AddRange(bots);
+        var humanPlayer=new Player();
         listCards=Card.GeneralDeckCard();
         listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
         foreach(Player player in allPlayers)
         {
             var (FirstCard,SecondCard)=GiveCardsStart(listCards);
             player.Deck=[FirstCard,SecondCard];
+            if(player is not Bot)
+            {
+                humanPlayer=player;
+            }
         }
         while(handTour<5 ||allPlayers.Count()>1)
         {

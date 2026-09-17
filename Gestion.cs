@@ -37,9 +37,12 @@ public class Gestion
     public void StartGame()
     {
         int minBet=50;
-        int mainPot=0;
+        int countRound=1;
         var newPlayer=new Player();
-
+        var allPlayers=new List<Player>();
+        var allPlayersForRound=new List<Player>();
+        allPlayers.AddRange(bots);
+        allPlayers.Add(player);
         string name=null;
         while(string.IsNullOrWhiteSpace(name))
         {
@@ -49,11 +52,20 @@ public class Gestion
         newPlayer.Name=name;
         var gameEngine=new GameEngine();
         gameEngine.Init(bots);
-        // Card.showCards(player.Deck);
-        // while(bots.Count()+players.Count==1)
-        // {
-        //     gameEngine.Hand(bots,players,minBet,mainPot);//quand tous les tours sont finis
-        // }
+        allPlayersForRound=allPlayers;
+        while(allPlayers.Count()!=1)
+        {
+            gameEngine.Round(allPlayersForRound,minBet);//quand tous les tours sont finis
+            countRound++;
+            minBet=50;
+            allPlayers=Player.RemoveLoserPlayer(allPlayers);
+            
+            switch(countRound)
+            {
+                case >10:;break;
+                
+            }
+        }
     }
     public void Test()
     {

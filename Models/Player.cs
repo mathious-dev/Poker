@@ -37,4 +37,16 @@ public class Player
     {
         Console.WriteLine($"\nVotre mise : {this.BetOfTheRound}");
     }
+    public static List<Player> RemoveLoserPlayer(List<Player> players)
+    {
+        var newListPlayer=new List<Player>();
+        foreach(Player player in players)
+        {
+            if(player.Coin>0)
+                newListPlayer.Add(player);
+            else
+               Console.WriteLine($"\nLe joueur {player.Name} est éliminé"); 
+        }
+        return newListPlayer;
+    }
 }
