@@ -18,11 +18,15 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public void BotAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin,ref int  mainPot,int minBet)
+    public void BotAction(int highestValue,ref int  mainPot,int minBet)
+    {
+        int combinationStart=EvaluateDeck(this.Deck);
+        int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBet);
+        Bet(ref mainPot,amountBet);
+    }
+    public int EvaluateDeck(Card[] cards)
     {
         
-        int amountBet=DeclarationOfAction( level, highestValue, combinationStart, maxCoin);
-        Bet(ref mainPot,amountBet);
     }
     public  bool Bluff(int level)
     {
@@ -140,23 +144,22 @@ public class Bot : Player
             ;break;
         }
     }
-    public  int DeclarationOfAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin)
+    public  int DeclarationOfAction(int level,int highestValue,int combinationStart,int maxCoin,int minBet)
     {
-        int combinationInt=(int)combinationStart;
         int amountBet=0;
         int betMin=0;
         int betMax=0;
         bool bluffOrNot=false;
         Random randomBet=new Random();
-        if(combinationInt==1)
+        if(combinationStart==1)
             bluffOrNot=Bluff(level);
         if(!bluffOrNot)
         {
             switch(level)
             {
-                case 1 : BotLevelEasy(highestValue,combinationInt,maxCoin,ref  betMin,ref  betMax);break;
-                case 2 : BotLevelMiddle(highestValue,combinationInt,maxCoin,ref  betMin,ref  betMax);break;
-                case 3 : BotLevelHard(highestValue,combinationInt,maxCoin,ref  betMin,ref  betMax);break;
+                case 1 : BotLevelEasy(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax);break;
+                case 2 : BotLevelMiddle(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax);break;
+                case 3 : BotLevelHard(highestValue,combinationStart,maxCoin,ref  betMin,ref  betMax);break;
             }
             amountBet=randomBet.Next(betMin,betMax);
         }
