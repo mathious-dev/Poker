@@ -57,6 +57,7 @@ public class Gestion
     }
     public void Test()
     {
+        string combination;
         var listGagnant=new List<Player>();
         var listPlayers=new List<Player>();
         var winner=new Player();
@@ -98,12 +99,12 @@ public class Gestion
             new Card(5) {  Type = TypeCard.Coeur },
             new Card(10) { Type = TypeCard.Coeur }
         };
-        // (listGagnant,winner)=Rule.RulePair(listPlayers,listCard);
-        // (listGagnant,winner)=Rule.RuleThreeSameKind(listPlayers,listCard);
-        (listGagnant,winner)=Rule.RuleFollow(listPlayers,listCard);
-        // (listGagnant,winner)=Rule.RuleFollowFlush(listPlayers,listCard);
-        // (listGagnant,winner)=Rule.RuleFollowRoyalFlush(listPlayers,listCard);
-        // (listGagnant,winner)=Rule.RuleFull(listPlayers,listCard);
+        // (listGagnant,winner,combination)=Rule.RulePair(listPlayers,listCard);
+        // (listGagnant,winner,combination)=Rule.RuleThreeSameKind(listPlayers,listCard);
+        (listGagnant,winner,combination)=Rule.RuleFollow(listPlayers,listCard);
+        // (listGagnant,winner,combination)=Rule.RuleFollowFlush(listPlayers,listCard);
+        // (listGagnant,winner,combination)=Rule.RuleFollowRoyalFlush(listPlayers,listCard);
+        // (listGagnant,winner,combination)=Rule.RuleFull(listPlayers,listCard);
         Console.WriteLine($"le gagnant est : {winner.Name}");
         if(listGagnant !=null)
         {

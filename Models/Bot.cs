@@ -18,7 +18,7 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public void BotAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin,ref int  mainPot)
+    public void BotAction(int level,int highestValue,Rule.RuleEnum combinationStart,int maxCoin,ref int  mainPot,int minBet)
     {
         
         int amountBet=DeclarationOfAction( level, highestValue, combinationStart, maxCoin);
