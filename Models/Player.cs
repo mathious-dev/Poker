@@ -54,4 +54,20 @@ public class Player
         Bet(ref mainPot,this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
     }
+    public void PlayerWin(int amountWin,string? combination)
+    {
+        this.Coin=amountWin;
+        Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
+        if(combination)
+            Console.WriteLine($"et avec la combinaison {combination}");
+    }
+    public void MultiplePLayersWin(int mainPot,List<Player>winners,string? combination)
+    {
+        int countPlayer=winners.Count();
+        int amount=mainPot/countPlayer;
+        foreach(Player winner in winners )
+        {
+            winner.PlayerWin(amount,combination);
+        }
+    }
 }

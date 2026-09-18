@@ -74,6 +74,8 @@ public class GameEngine
                 }
                 
             }
+            if(allPlayers.Count()==1)//si tous les bots se couchent
+                break;
             if(allPlayers.Contains(humanPlayer))
             {
                 Console.Write("\n Que voulez-vous faire?");
@@ -81,6 +83,17 @@ public class GameEngine
             }
             handTour++;
         }
+        if(allPlayers.Count()==1)
+        {
+            var winner= new Player();
+            winner=allPlayers.First();
+            winner.PlayerWin(mainPot);
+        }
+        else
+        {
+            WhoWin(allPlayers,listCardsOnTable);
+        }
+
         
     }
     public void ChoiceUser(ref int minBet,ref int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
@@ -181,16 +194,13 @@ public class GameEngine
             }
         }
     }
-    public (List<Player>?,Player,string) WhoWin(List<Bot>bots,List<Player> players,List<Card> mainCards)
+    public (List<Player>?,Player,string) WhoWin(List<Player> allPlayers,List<Card> mainCards)
     {
         string combination;
-        var allPlayers=new List<Player>();
-        allPlayers.AddRange(bots);
-        allPlayers.AddRange(players);
         var winner = new Player();
         var winners=new List<Player>();
         (winners,winner,combination)=Rule.RuleFollowRoyalFlush(allPlayers,mainCards);
-        if(winner.Name!=null)
+        if(winner.Name!=null)//ajouter méthode pour savoir si un gagnant ou plusieurs
             return (winners,winner,combination);
 
         (winners,winner,combination)=Rule.RuleFollowFlush(allPlayers,mainCards);
