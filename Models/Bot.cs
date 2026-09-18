@@ -103,6 +103,7 @@ public class Bot : Player
         else
             bluff=false;
     }
+    //probabilités faites avec l'ia, à vérifier
     public  void BotLevelEasy(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax,int minBetOnTable)
     {
         switch (combinationInt)

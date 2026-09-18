@@ -57,15 +57,20 @@ public class Gestion
         {
             gameEngine.Round(allPlayersForRound,minBet);//quand tous les tours sont finis
             countRound++;
-            minBet=50;
-            allPlayers=Player.RemoveLoserPlayer(allPlayers);
             
-            switch(countRound)
-            {
-                case >10:;break;
+            allPlayers=Player.RemoveLoserPlayer(allPlayers);
+            double newBetMin=countRound/10;
+            if(newBetMin<1)
+                minBet=50;
+            else
+                minBet=50*((int)newBetMin+1);
+            allPlayersForRound=allPlayers;
                 
-            }
         }
+    }
+    public void Game()
+    {
+        
     }
     public void Test()
     {

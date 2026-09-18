@@ -49,4 +49,9 @@ public class Player
         }
         return newListPlayer;
     }
+    public void PlayerAllIn(ref int mainPot)
+    {
+        Bet(ref mainPot,this.Coin);
+        Console.WriteLine("\nVous avez tout miser !" );
+    }
 }

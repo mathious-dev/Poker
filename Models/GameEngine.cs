@@ -76,21 +76,22 @@ public class GameEngine
     }
     public void ChoiceUser(ref int minBet,ref int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
+        bool playerHasBetOrFinish=false;
         int choice=0;
-        string[] tab={"Miser","Se coucher","Consulter vos informations","Voir les informations principales","Arrêter le jeu"};
-        while(choice!=1&&choice!=2&&choice!=4)
+        string[] tab={"Miser","Se coucher","Consulter vos informations","Voir les informations principales"};
+        while(!playerHasBetOrFinish)
         {
+            int i=1;
             foreach(string sentenceChoice in tab)
             {
-                int i=1;
                 Console.WriteLine($"\n{i}.{sentenceChoice}");
                 i++;
             }
             choice=Gestion.IntEnter();
             switch(choice)
             {
-                case 1:UserBet(ref minBet,ref mainPot,humanPlayer);break;
-                case 2:humanPlayer.PlayerSleep(allPlayersInGame);break;
+                case 1:UserBet(ref minBet,ref mainPot,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
+                case 2:humanPlayer.PlayerSleep(allPlayersInGame);playerHasBetOrFinish = true;break;
                 case 3:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
                 case 4:
                 foreach(Player player in allPlayersInGame)
@@ -102,20 +103,45 @@ public class GameEngine
                 }
                 Console.WriteLine($"\nLe pot principal est de {mainPot} et la mise minimal est de {minBet}");
                 break;
-                case 5:Console.WriteLine("\nFin du jeu");break;
-                
             }
         }
     }
-    public void UserBet(ref int minBet,ref int mainPot,Player humanPlayer)
+    //possibilité de refactoriser
+    public void UserBet(ref int minBet,ref int mainPot,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
     {
-        //faire attention si on annule il peut y avoir une erreur
         bool finish=false;
         int montant;
-        int stop=0;
-        Console.WriteLine("\nEntrez le montant a miser");
+        Console.WriteLine($"\nVous avez {humanPlayer.Coin} jetons");
         while(!finish)
         {
+            int stop=0;
+            int allInChoice=0;
+            if(minBet>humanPlayer.Coin)
+            {
+                Console.WriteLine($"\nLe minimum a miser est de {minBet}, ce qui est supérieur à votre pot {humanPlayer.Coin} Voulez-vous all-in? \n1.OUI\n2.NON, vous vous couchez");
+                while(allInChoice!=1&&allInChoice!=2)
+                {
+                    allInChoice=Gestion.IntEnter();
+                    if(allInChoice==1)
+                    {
+                        humanPlayer.PlayerAllIn(ref mainPot);
+                        hasBetOrFinish=true;
+                        humanPlayer.CheckBet();
+                        finish=true;
+                    }
+                        
+                    else if(allInChoice==2)
+                    {
+                        humanPlayer.PlayerSleep(allPlayersInGame);
+                        hasBetOrFinish=true;
+                        finish = true;
+                    }
+                    else
+                        Console.WriteLine("\nVous devez choisir une option !");
+                }
+                continue; // Force à repartir au début du while
+            }
+            Console.WriteLine("\nEntrez le montant a miser");
             montant=Gestion.IntEnter();
             if(montant<minBet)
             {
@@ -124,12 +150,24 @@ public class GameEngine
                 {
                     Console.WriteLine("\nAnnuler?\n 1.OUI\n2.NON");
                     stop=Gestion.IntEnter();
+                    if(stop==1)
+                    {
+                        hasBetOrFinish=false;
+                        Console.WriteLine("\nAnnulation...");
+                        finish=true;
+                    }
+                    else if(stop != 1 && stop != 2)
+                    {
+                        Console.WriteLine("\nVous devez choisir une option !");
+                    } 
                 }
             }
             else
             {
                 humanPlayer.Bet(ref mainPot,montant);
+                hasBetOrFinish=true;
                 Console.WriteLine($"\nVotre pot est de {humanPlayer.Coin}");
+                Console.WriteLine($"\nVotre mise totale est de {humanPlayer.BetOfTheRound}");
                 finish=true;
             }
         }
