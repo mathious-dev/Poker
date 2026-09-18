@@ -42,34 +42,43 @@ public class GameEngine
                 humanPlayer=player;
             }
         }
-        while(handTour<5 ||allPlayers.Count()>1)
+        while(handTour<5 &&allPlayers.Count()>1)
         {
+
             Console.WriteLine($"\nTour {handTour}");
+            humanPlayer.UserCheckCard();
+            Console.WriteLine($"\nle pot est de : {mainPot} jetons");
             if(handTour==2)
             {
                 for(int i=0;i<3;i++)
                 {
                     var card=GiveCard(listCards);
                     listCardsOnTable.Add(card);
+                    
                 }
+                Card.ShowCards(listCardsOnTable);
             }
-            else if(handTour>2)
+            else if(handTour>2&&handTour<5)
             {
                 var card=GiveCard(listCards);
                 listCardsOnTable.Add(card);
+                Card.ShowCards(listCardsOnTable);
             }
-            foreach(Player player in allPlayers)
+            foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
             {
                 if(player is Bot bot)
                 {
-                    int betFromBot=bot.BotAction(ref mainPot,ref minBet,null);
+                    int betFromBot=bot.BotAction(ref mainPot,ref minBet,listCardsOnTable);
                     if(betFromBot<minBet||betFromBot==0)
                         bot.PlayerSleep(allPlayers);   
                 }
                 
             }
-            Console.Write("\n Que voulez-vous faire?");
-            ChoiceUser(ref minBet,ref mainPot,allPlayers,humanPlayer);
+            if(allPlayers.Contains(humanPlayer))
+            {
+                Console.Write("\n Que voulez-vous faire?");
+                ChoiceUser(ref minBet,ref mainPot,allPlayers,humanPlayer);
+            }
             handTour++;
         }
         

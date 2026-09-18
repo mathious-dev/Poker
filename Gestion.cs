@@ -41,8 +41,6 @@ public class Gestion
         var newPlayer=new Player();
         var allPlayers=new List<Player>();
         var allPlayersForRound=new List<Player>();
-        allPlayers.AddRange(bots);
-        allPlayers.Add(player);
         string name=null;
         while(string.IsNullOrWhiteSpace(name))
         {
@@ -50,8 +48,11 @@ public class Gestion
             name=Console.ReadLine();
         }
         newPlayer.Name=name;
+        player=newPlayer;
         var gameEngine=new GameEngine();
         gameEngine.Init(bots);
+        allPlayers.AddRange(bots);
+        allPlayers.Add(player);
         allPlayersForRound=allPlayers;
         while(allPlayers.Count()!=1)
         {
