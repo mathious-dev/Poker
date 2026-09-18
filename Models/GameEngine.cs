@@ -87,11 +87,11 @@ public class GameEngine
         {
             var winner= new Player();
             winner=allPlayers.First();
-            winner.PlayerWin(mainPot);
+            winner.PlayerWin(mainPot,null,listCardsOnTable);
         }
         else
         {
-            WhoWin(allPlayers,listCardsOnTable);
+            WhoWin(allPlayers,listCardsOnTable,mainPot);
         }
 
         
@@ -194,49 +194,56 @@ public class GameEngine
             }
         }
     }
-    public (List<Player>?,Player,string) WhoWin(List<Player> allPlayers,List<Card> mainCards)
+    public void WhoWin(List<Player> allPlayers,List<Card> mainCards,int mainPot)
     {
         string combination;
         var winner = new Player();
         var winners=new List<Player>();
         (winners,winner,combination)=Rule.RuleFollowRoyalFlush(allPlayers,mainCards);
-        if(winner.Name!=null)//ajouter méthode pour savoir si un gagnant ou plusieurs
-            return (winners,winner,combination);
-
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+    
         (winners,winner,combination)=Rule.RuleFollowFlush(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleSquare(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleFull(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleSameCardColor(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleFollow(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleThreeSameKind(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleDoublePair(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RulePair(allPlayers,mainCards);
-        if(winner.Name!=null)
-            return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
 
         (winners,winner,combination)=Rule.RuleHightCard(allPlayers);
-        return (winners,winner,combination);
+        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+    }
+    public void OneWinnerOrMore(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable,int mainPot)
+    {
+        if(winners.Any())
+            Player.MultiplePLayersWin(mainPot,winners,combination,cardsOnTable);
+        else
+            winner.PlayerWin(mainPot,combination,cardsOnTable);
+    }
+    public bool CheckWinner(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable,int mainPot)
+    {
+        if(winner.Name!=null)
+        {
+            OneWinnerOrMore(winners,winner,combination,cardsOnTable,mainPot);
+            return true;
+        }
+        return false;
     }
     public (Card,Card) GiveCardsStart(List<Card> listCards)
     {

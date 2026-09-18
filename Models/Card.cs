@@ -46,7 +46,7 @@ public class Card
     }
     public static void ShowCards(IEnumerable<Card> cards)
     {
-        if(cards.Any())
+        if(cards.Any())//si c'est une liste donc les cartes sur la table
         {
             Console.WriteLine($"\nVoici les cartes");
             foreach(Card card in cards)
@@ -57,7 +57,7 @@ public class Card
                     Console.WriteLine($"\n{card.Number} de {card.Type}");
             }
         }
-        else if(cards!=null)
+        else if(cards!=null)//si c'est un tableau donc le Deck du joueur
         {
             Console.WriteLine($"\nVoici vos cartes");
             foreach(Card card in cards)

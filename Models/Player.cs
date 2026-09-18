@@ -54,20 +54,25 @@ public class Player
         Bet(ref mainPot,this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
     }
-    public void PlayerWin(int amountWin,string? combination)
+    public void PlayerWin(int amountWin,string? combination,List<Card>mainCards)
     {
+        var allCards=new List<Card>();
+        allCards=Rule.GroupCards(this.Deck,mainCards);
         this.Coin=amountWin;
         Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
         if(combination)
             Console.WriteLine($"et avec la combinaison {combination}");
+        Card.ShowCards(mainCards);
+        Card.ShowCards(this.Deck);
+        
     }
-    public void MultiplePLayersWin(int mainPot,List<Player>winners,string? combination)
+    public static void MultiplePLayersWin(int mainPot,List<Player>winners,string? combination,List<Card>mainCards)
     {
         int countPlayer=winners.Count();
         int amount=mainPot/countPlayer;
         foreach(Player winner in winners )
         {
-            winner.PlayerWin(amount,combination);
+            winner.PlayerWin(amount,combination,mainCards);
         }
     }
 }
