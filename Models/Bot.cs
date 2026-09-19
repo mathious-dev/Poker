@@ -24,7 +24,7 @@ public class Bot : Player
         Console.WriteLine($"\nLe bot {this.Name} fait tapis !");
         return amountBet;
     }
-    public int BotAction(int mainPot,int minBetOnTable,List<Card>?cards)
+    public int BotAction(int minBetOnTable,List<Card>?cards)
     {
         var (combinationStart,highestValue)=EvaluateDeck(this.Deck,cards);
         int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);

@@ -23,12 +23,6 @@ public class GameEngine
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
         }
     }
-    public void BetFromBotOrPlayer(ref int mainPot,ref int minBet,int AmountBet)
-    {
-        if(AmountBet>minBet)
-            MinBetChange(ref minBet,AmountBet);
-        AddBetOnMainPot(ref mainPot,AmountBet);
-    }
     public void AddBetOnMainPot(ref int mainPot,int AmountBet)
     {
         mainPot+=AmountBet;
@@ -58,7 +52,7 @@ public class GameEngine
         }
         while(handTour<5 &&allPlayers.Count()>1)
         {
-
+            int countPlayerPlayed=0;
             Console.WriteLine($"\nTour {handTour}");
             humanPlayer.UserCheckCard();
             Console.WriteLine($"\nle pot est de : {mainPot} jetons");
@@ -78,26 +72,48 @@ public class GameEngine
                 listCardsOnTable.Add(card);
                 Card.ShowCards(listCardsOnTable);
             }
-            foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
+            while(allPlayers.Count()!=countPlayerPlayed)
             {
-                if(player is Bot bot)
+                Console.WriteLine($"\nLa mise minimal est de : {minBet}");
+                foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                 {
-                    int betFromBot=bot.BotAction(mainPot,minBet,listCardsOnTable);
-                    if(betFromBot<minBet||betFromBot==0)
-                        bot.PlayerSleep(allPlayers);   
-                    else
-                        BetFromBotOrPlayer(ref mainPot,ref minBet,betFromBot);
-                    player.Bet(betFromBot);
+                    if(allPlayers.Count()==1)
+                    break;
+                    if(player is Bot bot)
+                    {
+                        int betFromBot=bot.BotAction(minBet,listCardsOnTable);
+                        if(betFromBot<minBet||betFromBot==0)
+                            bot.PlayerSleep(allPlayers);   
+                        else if(betFromBot>minBet)
+                        {
+                            MinBetChange(ref minBet,betFromBot);
+                            countPlayerPlayed=0;
+                        }
+                        else
+                            countPlayerPlayed++;
+                        AddBetOnMainPot(ref mainPot,betFromBot);
+                    }
+                }
+                if(allPlayers.Count()==1)//si tous les bots se couchent
+                    break;
+                if(allPlayers.Contains(humanPlayer))
+                {
+                    Console.Write("\n Que voulez-vous faire?");
+                    int amountBet=ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
+                    if(amountBet<minBet||amountBet==0)
+                            humanPlayer.PlayerSleep(allPlayers);   
+                        else if(amountBet>minBet)
+                        {
+                            MinBetChange(ref minBet,amountBet);
+                            countPlayerPlayed=0;
+                        }
+                        else
+                            countPlayerPlayed++;
+                        AddBetOnMainPot(ref mainPot,amountBet);
                 }
             }
-            if(allPlayers.Count()==1)//si tous les bots se couchent
-                break;
-            if(allPlayers.Contains(humanPlayer))
-            {
-                Console.Write("\n Que voulez-vous faire?");
-                ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
-            }
             handTour++;
+            Console.WriteLine($"\nle pot est de : {mainPot} jetons");
         }
         if(allPlayers.Count()==1)
         {
@@ -107,13 +123,12 @@ public class GameEngine
         }
         else
             WhoWin(allPlayers,listCardsOnTable,mainPot);
-
-        
     }
-    public void ChoiceUser(int minBet,int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
+    public int ChoiceUser(int minBet,int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
         bool playerHasBetOrFinish=false;
         int choice=0;
+        int amountBetFromHuman=0;
         string[] tab={"Miser","Se coucher","Consulter vos informations","Voir les informations principales"};
         while(!playerHasBetOrFinish)
         {
@@ -126,8 +141,8 @@ public class GameEngine
             choice=Gestion.IntEnter();
             switch(choice)
             {
-                case 1:UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
-                case 2:humanPlayer.PlayerSleep(allPlayersInGame);playerHasBetOrFinish = true;break;
+                case 1:amountBetFromHuman=UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
+                case 2:amountBetFromHuman=0;playerHasBetOrFinish = true;break;
                 case 3:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
                 case 4:
                 foreach(Player player in allPlayersInGame)
@@ -141,12 +156,13 @@ public class GameEngine
                 break;
             }
         }
+        return amountBetFromHuman;
     }
     //possibilité de refactoriser
-    public void UserBet(int minBet,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
+    public int UserBet(int minBet,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
     {
         bool finish=false;
-        int montant;
+        int amountBet=0;
         Console.WriteLine($"\nVous avez {humanPlayer.Coin} jetons");
         while(!finish)
         {
@@ -160,7 +176,7 @@ public class GameEngine
                     allInChoice=Gestion.IntEnter();
                     if(allInChoice==1)
                     {
-                        humanPlayer.PlayerAllIn();
+                        amountBet=humanPlayer.PlayerAllIn();
                         hasBetOrFinish=true;
                         humanPlayer.CheckBet();
                         finish=true;
@@ -178,8 +194,8 @@ public class GameEngine
                 continue; // Force à repartir au début du while
             }
             Console.WriteLine("\nEntrez le montant a miser");
-            montant=Gestion.IntEnter();
-            if(montant<minBet)
+            amountBet=Gestion.IntEnter();
+            if(amountBet<minBet)
             {
                 Console.WriteLine($"\nVous devez misez plus ou égal que {minBet} !");
                 while(stop!=1&&stop!=2)
@@ -200,13 +216,14 @@ public class GameEngine
             }
             else
             {
-                humanPlayer.Bet(montant);
+                amountBet=humanPlayer.Bet(amountBet);
                 hasBetOrFinish=true;
                 Console.WriteLine($"\nVotre pot est de {humanPlayer.Coin}");
                 Console.WriteLine($"\nVotre mise totale est de {humanPlayer.BetOfTheRound}");
                 finish=true;
             }
         }
+        return amountBet;
     }
     public void WhoWin(List<Player> allPlayers,List<Card> mainCards,int mainPot)
     {
