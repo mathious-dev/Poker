@@ -23,6 +23,20 @@ public class GameEngine
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
         }
     }
+    public void BetFromBotOrPlayer(ref int mainPot,ref int minBet,int AmountBet)
+    {
+        if(AmountBet>minBet)
+            MinBetChange(ref minBet,AmountBet);
+        AddBetOnMainPot(ref mainPot,AmountBet);
+    }
+    public void AddBetOnMainPot(ref int mainPot,int AmountBet)
+    {
+        mainPot+=AmountBet;
+    }
+    public void MinBetChange(ref int minBet,int AmountBet)
+    {
+        minBet=AmountBet;
+    }
     public void Round(List<Player>allPlayers,int minBet)
     {
         Random randomCard=new Random();
@@ -68,18 +82,20 @@ public class GameEngine
             {
                 if(player is Bot bot)
                 {
-                    int betFromBot=bot.BotAction(ref mainPot,ref minBet,listCardsOnTable);
+                    int betFromBot=bot.BotAction(mainPot,minBet,listCardsOnTable);
                     if(betFromBot<minBet||betFromBot==0)
                         bot.PlayerSleep(allPlayers);   
+                    else
+                        BetFromBotOrPlayer(ref mainPot,ref minBet,betFromBot);
+                    player.Bet(betFromBot);
                 }
-                
             }
             if(allPlayers.Count()==1)//si tous les bots se couchent
                 break;
             if(allPlayers.Contains(humanPlayer))
             {
                 Console.Write("\n Que voulez-vous faire?");
-                ChoiceUser(ref minBet,ref mainPot,allPlayers,humanPlayer);
+                ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
             }
             handTour++;
         }
@@ -90,13 +106,11 @@ public class GameEngine
             winner.PlayerWin(mainPot,null,listCardsOnTable);
         }
         else
-        {
             WhoWin(allPlayers,listCardsOnTable,mainPot);
-        }
 
         
     }
-    public void ChoiceUser(ref int minBet,ref int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
+    public void ChoiceUser(int minBet,int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
         bool playerHasBetOrFinish=false;
         int choice=0;
@@ -112,7 +126,7 @@ public class GameEngine
             choice=Gestion.IntEnter();
             switch(choice)
             {
-                case 1:UserBet(ref minBet,ref mainPot,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
+                case 1:UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
                 case 2:humanPlayer.PlayerSleep(allPlayersInGame);playerHasBetOrFinish = true;break;
                 case 3:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
                 case 4:
@@ -129,7 +143,7 @@ public class GameEngine
         }
     }
     //possibilité de refactoriser
-    public void UserBet(ref int minBet,ref int mainPot,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
+    public void UserBet(int minBet,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
     {
         bool finish=false;
         int montant;
@@ -146,7 +160,7 @@ public class GameEngine
                     allInChoice=Gestion.IntEnter();
                     if(allInChoice==1)
                     {
-                        humanPlayer.PlayerAllIn(ref mainPot);
+                        humanPlayer.PlayerAllIn();
                         hasBetOrFinish=true;
                         humanPlayer.CheckBet();
                         finish=true;
@@ -186,7 +200,7 @@ public class GameEngine
             }
             else
             {
-                humanPlayer.Bet(ref mainPot,montant);
+                humanPlayer.Bet(montant);
                 hasBetOrFinish=true;
                 Console.WriteLine($"\nVotre pot est de {humanPlayer.Coin}");
                 Console.WriteLine($"\nVotre mise totale est de {humanPlayer.BetOfTheRound}");

@@ -18,15 +18,24 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public int BotAction(ref int  mainPot,ref int minBetOnTable,List<Card>?cards)
+    public override int PlayerAllIn()
+    {
+        int amountBet=Bet(this.Coin);
+        Console.WriteLine($"\nLe bot {this.Name} fait tapis !");
+        return amountBet;
+    }
+    public int BotAction(int mainPot,int minBetOnTable,List<Card>?cards)
     {
         var (combinationStart,highestValue)=EvaluateDeck(this.Deck,cards);
         int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);
-        if(amountBet>minBetOnTable)
+        if(amountBet>=minBetOnTable)
         {
-            minBetOnTable=amountBet;
-            Bet(ref mainPot,amountBet);
+            if(amountBet==this.Coin)
+                this.PlayerAllIn();
+            else
+                Bet(amountBet);
         }
+            
         return amountBet;
     }
     public (int,int) EvaluateDeck(Card[] cardsOfBot,List<Card>?cardsOnTable)
@@ -295,7 +304,7 @@ public class Bot : Player
                 amountBet = randomBet.Next(betMin, betMax + 1); //+1 pour inclure le betMax
         }
         else
-            amountBet=maxCoin;
+            amountBet=this.Coin;
         
         return amountBet;
     }

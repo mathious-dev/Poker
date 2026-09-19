@@ -6,12 +6,12 @@ public class Player
     public int Coin{get;set;}=1000;
     public int BetOfTheRound{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
-    public void Bet(ref int mainPot,int AmountBet)
+    public int Bet(int AmountBet)
     {
-        mainPot+=AmountBet;
         BetOfTheRound+=AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
         Coin-=AmountBet;
+        return AmountBet;
     }
     public void PlayerSleep(List<Player>allPlayers)
     {
@@ -49,10 +49,11 @@ public class Player
         }
         return newListPlayer;
     }
-    public void PlayerAllIn(ref int mainPot)
+    public virtual int PlayerAllIn()
     {
-        Bet(ref mainPot,this.Coin);
+        int amountBet=Bet(this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
+        return amountBet;
     }
     public void PlayerWin(int amountWin,string? combination,List<Card>mainCards)
     {
@@ -60,7 +61,7 @@ public class Player
         allCards=Rule.GroupCards(this.Deck,mainCards);
         this.Coin=amountWin;
         Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
-        if(combination)
+        if(combination!=null)
             Console.WriteLine($"et avec la combinaison {combination}");
         Card.ShowCards(mainCards);
         Card.ShowCards(this.Deck);

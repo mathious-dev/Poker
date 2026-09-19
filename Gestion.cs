@@ -66,7 +66,7 @@ public class Gestion
             else
                 minBet=50*((int)newBetMin+1);
             allPlayersForRound=allPlayers;
-                
+            
         }
     }
     public void Game()
