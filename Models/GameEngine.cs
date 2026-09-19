@@ -30,7 +30,7 @@ public class GameEngine
     public void MinBetChange(ref int minBet,int AmountBet)
     {
         minBet=AmountBet;
-    }
+    }//refactoriser entièrement la méthode
     public void Round(List<Player>allPlayers,int minBet)
     {
         Random randomCard=new Random();
@@ -52,10 +52,12 @@ public class GameEngine
         }
         while(handTour<5 &&allPlayers.Count()>1)
         {
+            
             int countPlayerPlayed=0;
             Console.WriteLine($"\nTour {handTour}");
             humanPlayer.UserCheckCard();
             Console.WriteLine($"\nle pot est de : {mainPot} jetons");
+            
             if(handTour==2)
             {
                 for(int i=0;i<3;i++)
@@ -72,44 +74,54 @@ public class GameEngine
                 listCardsOnTable.Add(card);
                 Card.ShowCards(listCardsOnTable);
             }
-            while(allPlayers.Count()!=countPlayerPlayed)
+            if(!allPlayers.All(p=>p.allIn))
             {
-                Console.WriteLine($"\nLa mise minimal est de : {minBet}");
-                foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
+                while(allPlayers.Count()>countPlayerPlayed)
                 {
-                    if(allPlayers.Count()==1)
-                    break;
-                    if(player is Bot bot)
+                    Console.WriteLine($"\nLa mise minimal est de : {minBet}");
+                    foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
-                        int betFromBot=bot.BotAction(minBet,listCardsOnTable);
-                        if(betFromBot<minBet||betFromBot==0)
-                            bot.PlayerSleep(allPlayers);   
-                        else if(betFromBot>minBet)
+                        if (countPlayerPlayed >= allPlayers.Count() || allPlayers.Count() == 1)
+                        break;
+                        if (player.allIn)
                         {
-                            MinBetChange(ref minBet,betFromBot);
-                            countPlayerPlayed=0;
-                        }
-                        else
                             countPlayerPlayed++;
-                        AddBetOnMainPot(ref mainPot,betFromBot);
+                            continue; // On passe directement au joueur suivant
+                        }
+                        if(player is Bot bot)
+                        {
+                            int betFromBot=bot.BotAction(minBet,listCardsOnTable);
+                            if(!bot.allIn&&(betFromBot<minBet||betFromBot==0))
+                                bot.PlayerSleep(allPlayers);   
+                            else if(betFromBot>minBet)
+                            {
+                                MinBetChange(ref minBet,betFromBot);
+                                countPlayerPlayed=1;
+                            }
+                            else
+                                countPlayerPlayed++;
+                            AddBetOnMainPot(ref mainPot,betFromBot);
+                        }
                     }
-                }
-                if(allPlayers.Count()==1)//si tous les bots se couchent
-                    break;
-                if(allPlayers.Contains(humanPlayer))
-                {
-                    Console.Write("\n Que voulez-vous faire?");
-                    int amountBet=ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
-                    if(amountBet<minBet||amountBet==0)
-                            humanPlayer.PlayerSleep(allPlayers);   
-                        else if(amountBet>minBet)
-                        {
-                            MinBetChange(ref minBet,amountBet);
-                            countPlayerPlayed=0;
-                        }
-                        else
-                            countPlayerPlayed++;
-                        AddBetOnMainPot(ref mainPot,amountBet);
+                    if(allPlayers.Count()<=countPlayerPlayed)
+                        break;
+                    if(allPlayers.Count()==1)//si tous les bots se couchent
+                        break;
+                    if(allPlayers.Contains(humanPlayer)&&!humanPlayer.allIn)
+                    {
+                        Console.Write("\n Que voulez-vous faire?");
+                        int amountBet=ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
+                        if(!humanPlayer.allIn&&(amountBet<minBet||amountBet==0))
+                                humanPlayer.PlayerSleep(allPlayers);   
+                            else if(amountBet>minBet)
+                            {
+                                MinBetChange(ref minBet,amountBet);
+                                countPlayerPlayed=1;
+                            }
+                            else
+                                countPlayerPlayed++;
+                            AddBetOnMainPot(ref mainPot,amountBet);
+                    }
                 }
             }
             handTour++;
@@ -124,6 +136,7 @@ public class GameEngine
         else
             WhoWin(allPlayers,listCardsOnTable,mainPot);
     }
+    //ajouter option pour suivre et pareil pour les bots
     public int ChoiceUser(int minBet,int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
         bool playerHasBetOrFinish=false;

@@ -6,10 +6,13 @@ public class Player
     public int Coin{get;set;}=1000;
     public int BetOfTheRound{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
+    public bool allIn{get;set;}=false;
     public int Bet(int AmountBet)
     {
         BetOfTheRound+=AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
+        if(AmountBet==Coin)
+            this.allIn=true;
         Coin-=AmountBet;
         return AmountBet;
     }
@@ -53,13 +56,14 @@ public class Player
     {
         int amountBet=Bet(this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
+        this.allIn=true;
         return amountBet;
     }
     public void PlayerWin(int amountWin,string? combination,List<Card>mainCards)
     {
         var allCards=new List<Card>();
         allCards=Rule.GroupCards(this.Deck,mainCards);
-        this.Coin=amountWin;
+        this.Coin+=amountWin;
         Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
         if(combination!=null)
             Console.WriteLine($"et avec la combinaison {combination}");
@@ -75,5 +79,9 @@ public class Player
         {
             winner.PlayerWin(amount,combination,mainCards);
         }
+    }
+    public void FollowWithNoBet()
+    {
+        System.Console.WriteLine($"\nLe joueur {this.Name} suit");
     }
 }

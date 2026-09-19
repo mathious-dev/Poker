@@ -53,8 +53,8 @@ public class Gestion
         gameEngine.Init(bots);
         allPlayers.AddRange(bots);
         allPlayers.Add(player);
-        allPlayersForRound=allPlayers;
-        while(allPlayers.Count()!=1)
+        allPlayersForRound=allPlayers.ToList();
+        while(allPlayers.Count()>1)
         {
             Console.WriteLine($"\nRound : {countRound}");
             gameEngine.Round(allPlayersForRound,minBet);//quand tous les tours sont finis
@@ -65,7 +65,12 @@ public class Gestion
                 minBet=50;
             else
                 minBet=50*((int)newBetMin+1);
-            allPlayersForRound=allPlayers;
+            allPlayersForRound=allPlayers.ToList();
+            foreach(Player player in allPlayersForRound)
+            {
+                player.allIn=false;
+                player.BetOfTheRound=0;
+            }
         }
     }
     public void Game()
