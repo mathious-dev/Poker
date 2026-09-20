@@ -100,37 +100,27 @@ public class GameEngine
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
-                        if (VerifNumberPlayer(allPlayers,countPlayerPlayed))
+                         if (VerifNumberPlayer(allPlayers,countPlayerPlayed))
                             break;
-                        if(player is Bot bot)
+                        if(VerifPLayerAllIn(player))
                         {
-                            if(VerifPLayerAllIn(player))
-                            {
                                 countPlayerPlayed++;
                                 continue;// On passe directement au joueur suivant
+                        }
+                        if(player is Bot bot)
+                        {
+                            int betFromBot=bot.BotAction(minBet,listCardsOnTable);
+                            if(!bot.allIn&&(betFromBot<minBet||betFromBot==0))
+                                bot.PlayerSleep(allPlayers);   
+                            else if(betFromBot>minBet)
+                            {
+                                MinBetChange(ref minBet,betFromBot);
+                                countPlayerPlayed=1;
                             }
                             else
-                            {
-                                int betFromBot=bot.BotAction(minBet,listCardsOnTable);
-                                if(!bot.allIn&&(betFromBot<minBet||betFromBot==0))
-                                    bot.PlayerSleep(allPlayers);   
-                                else if(betFromBot>minBet)
-                                {
-                                    MinBetChange(ref minBet,betFromBot);
-                                    countPlayerPlayed=1;
-                                }
-                                else
-                                    countPlayerPlayed++;
-                                AddBetOnMainPot(ref mainPot,betFromBot);
-                            }
+                                countPlayerPlayed++;
+                            AddBetOnMainPot(ref mainPot,betFromBot);
                         }
-                    }
-                    if (VerifNumberPlayer(allPlayers,countPlayerPlayed))//au cas où tous les bots se couchent
-                            break;
-                    if(allPlayers.Contains(humanPlayer))
-                    {
-                        if(VerifPLayerAllIn(humanPlayer))
-                            countPlayerPlayed++;
                         else
                         {
                             Console.Write("\n Que voulez-vous faire?");
@@ -145,11 +135,11 @@ public class GameEngine
                             else
                                 countPlayerPlayed++;
                             AddBetOnMainPot(ref mainPot,amountBet);
-                        }  
+                        }
                     }
                 }
             }
-            if(handTour==4)
+            if(handTour==4||allPlayers.All(p=>p.allIn))
                 Player.EveryPlayerInGameShowCard(allPlayers);
             handTour++;
             ShowMainPot(mainPot);
@@ -169,7 +159,7 @@ public class GameEngine
         bool playerHasBetOrFinish=false;
         int choice=0;
         int amountBetFromHuman=0;
-        string[] tab={"Miser","Se coucher","Consulter vos informations","Voir les informations principales"};
+        string[] tab={"Miser","Suivre","Se coucher","Consulter vos informations","Voir les informations principales"};
         while(!playerHasBetOrFinish)
         {
             int i=1;
@@ -182,9 +172,10 @@ public class GameEngine
             switch(choice)
             {
                 case 1:amountBetFromHuman=UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
-                case 2:amountBetFromHuman=0;playerHasBetOrFinish = true;break;
-                case 3:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
-                case 4:
+                case 2:amountBetFromHuman=humanPlayer.FollowBet(minBet);break;
+                case 3:amountBetFromHuman=0;playerHasBetOrFinish = true;break;
+                case 4:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
+                case 5:
                 foreach(Player player in allPlayersInGame)
                 {
                     if(player.BetOfTheRound>0)

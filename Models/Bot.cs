@@ -23,7 +23,6 @@ public class Bot : Player
         int amountBet=Bet(this.Coin);
         Console.WriteLine($"\nLe bot {this.Name} fait tapis !");
         this.allIn=true;
-        UserCheckCard();
         return amountBet;
     }
     public int BotAction(int minBetOnTable,List<Card>?cards)
