@@ -30,7 +30,20 @@ public class GameEngine
     public void MinBetChange(ref int minBet,int AmountBet)
     {
         minBet=AmountBet;
-    }//refactoriser entièrement la méthode
+    }
+    public void SetSettingStartWithCardsAndCheckHumanPlayer(List<Card>listCards,List<Player>players,ref Player human)
+    {
+        foreach(Player player in players)
+        {
+            var (FirstCard,SecondCard)=GiveCardsStart(listCards);
+            player.Deck=[FirstCard,SecondCard];
+            if(player is not Bot)
+            {
+                human=player;
+            }
+        }
+    }
+    //refactoriser entièrement la méthode
     public void Round(List<Player>allPlayers,int minBet)
     {
         Random randomCard=new Random();
@@ -41,18 +54,8 @@ public class GameEngine
         var humanPlayer=new Player();
         listCards=Card.GeneralDeckCard();
         listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
-        foreach(Player player in allPlayers)
-        {
-            var (FirstCard,SecondCard)=GiveCardsStart(listCards);
-            player.Deck=[FirstCard,SecondCard];
-            if(player is not Bot)
-            {
-                humanPlayer=player;
-            }
-        }
         while(handTour<5 &&allPlayers.Count()>1)
         {
-            
             int countPlayerPlayed=0;
             Console.WriteLine($"\nTour {handTour}");
             humanPlayer.UserCheckCard();
@@ -64,7 +67,6 @@ public class GameEngine
                 {
                     var card=GiveCard(listCards);
                     listCardsOnTable.Add(card);
-                    
                 }
                 Card.ShowCards(listCardsOnTable);
             }
@@ -74,7 +76,7 @@ public class GameEngine
                 listCardsOnTable.Add(card);
                 Card.ShowCards(listCardsOnTable);
             }
-            if(!allPlayers.All(p=>p.allIn))
+            if (allPlayers.Count(p => !p.allIn) > 1)
             {
                 while(allPlayers.Count()>countPlayerPlayed)
                 {
@@ -82,7 +84,7 @@ public class GameEngine
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
                         if (countPlayerPlayed >= allPlayers.Count() || allPlayers.Count() == 1)
-                        break;
+                            break;
                         if (player.allIn)
                         {
                             countPlayerPlayed++;
@@ -107,20 +109,26 @@ public class GameEngine
                         break;
                     if(allPlayers.Count()==1)//si tous les bots se couchent
                         break;
-                    if(allPlayers.Contains(humanPlayer)&&!humanPlayer.allIn)
+                    if(allPlayers.Contains(humanPlayer))
                     {
-                        Console.Write("\n Que voulez-vous faire?");
-                        int amountBet=ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
-                        if(!humanPlayer.allIn&&(amountBet<minBet||amountBet==0))
-                                humanPlayer.PlayerSleep(allPlayers);   
-                            else if(amountBet>minBet)
-                            {
-                                MinBetChange(ref minBet,amountBet);
-                                countPlayerPlayed=1;
-                            }
-                            else
-                                countPlayerPlayed++;
-                            AddBetOnMainPot(ref mainPot,amountBet);
+                        if(!humanPlayer.allIn)
+                        {
+                            Console.Write("\n Que voulez-vous faire?");
+                            int amountBet=ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
+                            if(!humanPlayer.allIn&&(amountBet<minBet||amountBet==0))
+                                    humanPlayer.PlayerSleep(allPlayers);   
+                                else if(amountBet>minBet)
+                                {
+                                    MinBetChange(ref minBet,amountBet);
+                                    countPlayerPlayed=1;
+                                }
+                                else
+                                    countPlayerPlayed++;
+                                AddBetOnMainPot(ref mainPot,amountBet);
+                        }
+                        else
+                            countPlayerPlayed++;
+                        
                     }
                 }
             }
