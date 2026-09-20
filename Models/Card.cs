@@ -48,7 +48,7 @@ public class Card
     {
         if(cards.Any())//si c'est une liste donc les cartes sur la table
         {
-            Console.WriteLine($"\nVoici les cartes");
+            Console.WriteLine($"\nVoici les cartes sur la table");
             foreach(Card card in cards)
             {
                 if(card.Number>10)
@@ -59,7 +59,7 @@ public class Card
         }
         else if(cards!=null)//si c'est un tableau donc le Deck du joueur
         {
-            Console.WriteLine($"\nVoici vos cartes");
+            Console.WriteLine($"\nVoici les cartes du joueur");
             foreach(Card card in cards)
             {
                 if(card.Number>10)
@@ -68,10 +68,6 @@ public class Card
                     Console.WriteLine($"\n{card.Number} de {card.Type}");
             }
         }
-        
-    }
-    public void ShowAllInformationsOfTheRound(List<Player>players)
-    {
         
     }
 }

@@ -12,7 +12,11 @@ public class Player
         BetOfTheRound+=AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
         if(AmountBet==Coin)
+        {
             this.allIn=true;
+            UserCheckCard();
+        }
+            
         Coin-=AmountBet;
         return AmountBet;
     }
@@ -23,7 +27,7 @@ public class Player
     }
     public void UserCheckCard()
     {
-        Console.WriteLine($"\nVos cartes sont ");
+        Console.WriteLine($"\nles cartes du joueur {this.Name} sont ");
         foreach(Card card in this.Deck)
         {
             if(card.Number>10)
@@ -57,6 +61,7 @@ public class Player
         int amountBet=Bet(this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
         this.allIn=true;
+        UserCheckCard();
         return amountBet;
     }
     public void PlayerWin(int amountWin,string? combination,List<Card>mainCards)
@@ -67,6 +72,7 @@ public class Player
         Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
         if(combination!=null)
             Console.WriteLine($"et avec la combinaison {combination}");
+        
         Card.ShowCards(mainCards);
         Card.ShowCards(this.Deck);
         
@@ -82,6 +88,17 @@ public class Player
     }
     public void FollowWithNoBet()
     {
-        System.Console.WriteLine($"\nLe joueur {this.Name} suit");
+        Console.WriteLine($"\nLe joueur {this.Name} suit");
     }
+    public static void EveryPlayerInGameShowCard(List<Player> players)
+    {
+        foreach(Player player in players)
+        {
+            player.UserCheckCard();
+        }
+    }
+    // public void FollowBet(int amount)
+    // {
+    //     Bet(amount);
+    // }
 }
