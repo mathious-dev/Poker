@@ -74,7 +74,7 @@ public class GameEngine
     {
         Console.WriteLine($"\nle pot est de : {mainPot} jetons");
     }
-    //refactoriser entièrement la méthode
+    //Corriger la logique des mises car à chaque tour on est obligé de miser le minimum
     public void Round(List<Player>allPlayers,int minBet)
     {
         Random randomCard=new Random();
@@ -172,7 +172,7 @@ public class GameEngine
             switch(choice)
             {
                 case 1:amountBetFromHuman=UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
-                case 2:amountBetFromHuman=humanPlayer.FollowBet(minBet);break;
+                case 2:amountBetFromHuman=humanPlayer.FollowBet(minBet);playerHasBetOrFinish = true;break;
                 case 3:amountBetFromHuman=0;playerHasBetOrFinish = true;break;
                 case 4:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
                 case 5:
