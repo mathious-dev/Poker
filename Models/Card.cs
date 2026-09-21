@@ -48,24 +48,24 @@ public class Card
     {
         if(cards.Any())//si c'est une liste donc les cartes sur la table
         {
-            Console.WriteLine($"\nVoici les cartes sur la table");
+            Console.WriteLine($"\nVoici les cartes sur la table\n");
             foreach(Card card in cards)
             {
                 if(card.Number>10)
-                    Console.WriteLine($"\n{(FaceCard)card.Number} de {card.Type}");
+                    Console.WriteLine($"{(FaceCard)card.Number} de {card.Type} ");
                 else
-                    Console.WriteLine($"\n{card.Number} de {card.Type}");
+                    Console.WriteLine($" {card.Number} de {card.Type}");
             }
         }
         else if(cards!=null)//si c'est un tableau donc le Deck du joueur
         {
-            Console.WriteLine($"\nVoici les cartes du joueur");
+            Console.WriteLine($"\nVoici les cartes du joueur\n");
             foreach(Card card in cards)
             {
                 if(card.Number>10)
-                    Console.WriteLine($"\n{(FaceCard)card.Number} de {card.Type}");
+                    Console.WriteLine($"{(FaceCard)card.Number} de {card.Type} ");
                 else
-                    Console.WriteLine($"\n{card.Number} de {card.Type}");
+                    Console.WriteLine($" {card.Number} de {card.Type}");
             }
         }
         

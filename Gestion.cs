@@ -73,6 +73,7 @@ public class Gestion
                 player.BetOfTheRound=0;
             }
         }
+        countRound=1;
     }
     public void Game()
     {

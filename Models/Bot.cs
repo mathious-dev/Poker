@@ -30,7 +30,7 @@ public class Bot : Player
         int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);
         if(amountBet>=minBetOnTable)
         {
-            if(amountBet==this.Coin)
+            if(amountBet>=this.Coin)
                 this.PlayerAllIn();
             else
                 Bet(amountBet);
@@ -88,7 +88,7 @@ public class Bot : Player
         return((int)Rule.RuleEnum.HighCard,highCard);
 
     }
-    public  bool Bluff(int level)
+    public bool Bluff(int level)
     {
         Random randomBluff=new Random();
         bool bluff=false;
@@ -100,13 +100,13 @@ public class Bot : Player
         }
        return bluff;
     }
-    public  void BluffBot(int chanceForBluff,ref bool bluff)
+    public void BluffBot(int chanceForBluff,ref bool bluff)
     {
         Random randomBluff=new Random();
         int isBluffing=0;
         isBluffing=randomBluff.Next(1,chanceForBluff);
         if(isBluffing==1)
-            bluff=true;
+            bluff=true;  
         else
             bluff=false;
     }
@@ -303,7 +303,6 @@ public class Bot : Player
         }
         else
             amountBet=this.Coin;
-        
         return amountBet;
     }
 }

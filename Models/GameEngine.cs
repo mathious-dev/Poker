@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-
+using System;
 namespace Poker.Models;
 
 public class GameEngine
@@ -17,12 +17,14 @@ public class GameEngine
         bots.Add(bot1);
         bots.Add(bot2);
         bots.Add(bot3);
+        Console.ForegroundColor=ConsoleColor.Red;
         Console.WriteLine("\nCommencement de la partie.");
         foreach(Bot bot in bots)
         {
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
             bot.OnMoneyBet+=AddBetOnMainPot;
         }
+        Console.ResetColor();
     }
     public void AddBetOnMainPot(int amountBet)
     {
@@ -92,12 +94,12 @@ public class GameEngine
         {
             int countPlayerPlayed=0;
             Console.WriteLine($"\nTour {handTour}");
-            humanPlayer.UserCheckCard();
-            ShowMainPot();
+            if(humanPlayer.Name!=null)//si l'humain est toujours là 
+                humanPlayer.UserCheckCard();
             GiveCardOnTable(handTour,listCards,listCardsOnTable);
             if (allPlayers.Count(p => !p.AllIn) > 1)
             {
-                while(allPlayers.Count()>countPlayerPlayed)
+                while(allPlayers.Count()>countPlayerPlayed&& allPlayers.Count() > 1)
                 {
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
@@ -123,7 +125,6 @@ public class GameEngine
                     }
                 }
             }
-           
             if(handTour==4||allPlayers.All(p=>p.AllIn))
                 Player.EveryPlayerInGameShowCard(allPlayers);
             handTour++;
@@ -156,7 +157,14 @@ public class GameEngine
             switch(choice)
             {
                 case 1:UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
-                case 2:humanPlayer.FollowBet(minBet);playerHasBetOrFinish = true;break;
+                case 2 when humanPlayer.Coin<=minBet:
+                humanPlayer.PlayerAllIn();
+                playerHasBetOrFinish = true;
+                break;
+                case 2 : 
+                humanPlayer.FollowBet(minBet);
+                playerHasBetOrFinish = true;
+                break;
                 case 3:playerHasBetOrFinish = true;break;
                 case 4:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
                 case 5:
@@ -172,7 +180,6 @@ public class GameEngine
             }
         }
     }
-    //possibilité de refactoriser
     public void UserBet(int minBet,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
     {
         bool finish=false;

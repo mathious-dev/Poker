@@ -22,7 +22,7 @@ public class Rule
     public static (List<Player>,Player,string) RuleHightCard(List<Player> players)
     {
         int numCombination=1;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         int higherCard=0;
         var winner=new Player();
         foreach(var player in players)
@@ -32,26 +32,26 @@ public class Rule
             {
                 higherCard=higherCardPlayer;   
                 winner=player;      
-                winners.Clear();
+                othersWinners.Clear();
             }
             else if(higherCardPlayer==higherCard&& player!=winner)
             {
-                winners.Add(player);
+                othersWinners.Add(player);
             }
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RulePair(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=2;
-        (var winners,var winner)=GroupRuleSameNumber(players,cardPlace,2);
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        (var othersWinners,var winner)=GroupRuleSameNumber(players,cardPlace,2);
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleDoublePair(List<Player>players,List<Card> cardPlace)
     {
         //Modifier pour le cas d'une troisième paire
         int numCombination=3;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValueFirstPair=0;
         int highestValueSecondPair=0;
@@ -68,7 +68,7 @@ public class Rule
                         highestValueFirstPair=listSameKind.First();
                         highestValueSecondPair= listSameKind.Last();
                         winner=player;
-                        winners.Clear();
+                        othersWinners.Clear();
                     }
                     else if(listSameKind.First()==highestValueFirstPair)
                     {
@@ -76,34 +76,34 @@ public class Rule
                         {
                             highestValueSecondPair=listSameKind.Last();
                             winner=player;
-                            winners.Clear();
+                            othersWinners.Clear();
                         }
                         else if(listSameKind.Last()==highestValueSecondPair)
                         {
-                            winners.Add(player);
+                            othersWinners.Add(player);
                         }
                     }      
                 }     
             }
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleThreeSameKind(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=4;
-        (var winners,var winner)=GroupRuleSameNumber(players,cardPlace,3);
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        (var othersWinners,var winner)=GroupRuleSameNumber(players,cardPlace,3);
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleSquare(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=8;
-        (var winners,var winner)=GroupRuleSameNumber(players,cardPlace,4);
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        (var othersWinners,var winner)=GroupRuleSameNumber(players,cardPlace,4);
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleSameCardColor(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=6;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValue=0;
         foreach(var player in players)
@@ -113,29 +113,29 @@ public class Rule
             if(listSameColor.Any())
             {
                 listSameColor=listSameColor.Take(5).ToList();
-                ConditionHighestValueAndWinners(listSameColor,ref highestValue,winners,ref winner,player);
+                ConditionHighestValueAndothersWinners(listSameColor,ref highestValue,othersWinners,ref winner,player);
             }
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleFollow(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=5;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValue=0;
         foreach(var player in players)
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listFollow=GroupCardByFollow(allCards);
-            ConditionHighestValueAndWinners(listFollow,ref highestValue,winners,ref winner,player);
+            ConditionHighestValueAndothersWinners(listFollow,ref highestValue,othersWinners,ref winner,player);
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleFull(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=7;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValueTriple=0;
         int highestValuePair=0;
@@ -151,7 +151,7 @@ public class Rule
                     highestValueTriple=listFullTriple.First();
                     highestValuePair=listFullPair.First();
                     winner=player;
-                    winners.Clear();
+                    othersWinners.Clear();
                 }
                 else if(listFullTriple.First()==highestValueTriple)
                 {
@@ -159,57 +159,59 @@ public class Rule
                     {
                         highestValuePair=listFullPair.First();
                         winner=player;
-                        winners.Clear();
+                        othersWinners.Clear();
                     }
                     else if(listFullPair.First()==highestValuePair)
-                        winners.Add(player);
+                        othersWinners.Add(player);
                 }
             }
                 
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleFollowFlush(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=9;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValue=0;
         foreach(var player in players)
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listFollowFlush=GroupCardByFollowFlush(allCards);
-            ConditionHighestValueAndWinners(listFollowFlush,ref highestValue,winners,ref winner,player);
+            ConditionHighestValueAndothersWinners(listFollowFlush,ref highestValue,othersWinners,ref winner,player);
+            if(othersWinners.Any())
+                CompareLastCards(listFollowFlush,othersWinners,allCards,ref winner);
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
     public static (List<Player>,Player,string) RuleFollowRoyalFlush(List<Player>players,List<Card> cardPlace)
     {
         int numCombination=10;
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValue=0;
         foreach(var player in players)
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listFollowRoyalFlush=GroupCardByFollowRoyalFlush(allCards);
-            ConditionHighestValueAndWinners(listFollowRoyalFlush,ref highestValue,winners,ref winner,player);
+            ConditionHighestValueAndothersWinners(listFollowRoyalFlush,ref highestValue,othersWinners,ref winner,player);
         }
-        return (winners,winner,((Rule.RuleEnum)numCombination).ToString());
+        return (othersWinners,winner,((Rule.RuleEnum)numCombination).ToString());
     }
 
     public static (List<Player>,Player) GroupRuleSameNumber(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
-        var winners=new List<Player>();
+        var othersWinners=new List<Player>();
         var winner=new Player();
         int highestValue=0;
         foreach(var player in players)
         {
             var allCards=GroupCards(player.Deck,cardPlace);
             var listSameKind=SearchPairOrThreeSameOrFourSame(allCards,sameKindNumber);
-            ConditionHighestValueAndWinners(listSameKind,ref highestValue,winners,ref winner,player);
+            ConditionHighestValueAndothersWinners(listSameKind,ref highestValue,othersWinners,ref winner,player);
         }
-         return (winners,winner);
+         return (othersWinners,winner);
     }
     public static List<int> GroupCardByColor(List<Card> cards)
     {
@@ -254,7 +256,7 @@ public class Rule
         allCards.AddRange(cardPlace);
         return allCards;
     }
-    public static void ConditionHighestValueAndWinners(List<int> listSameKind,ref int highestValue,List<Player>winners,ref Player winner,Player player)
+    public static void ConditionHighestValueAndothersWinners(List<int> listSameKind,ref int highestValue,List<Player>othersWinners,ref Player winner,Player player)
     {
         if(listSameKind.Any())
             {
@@ -262,13 +264,37 @@ public class Rule
                 {
                     highestValue=listSameKind.First();
                     winner=player;
-                    winners.Clear();
+                    othersWinners.Clear();
                 }
                 else if(listSameKind.First()==highestValue)
                 {
-                    winners.Add(player);
+                    othersWinners.Add(player);
                 }
             }
+    }
+    public static void CompareLastCards(List<int>listFollowFlush,List<Player>othersWinners,List<Card>allCards,ref Player winner)
+    {
+        var allWinners= new List<Player>();
+        allWinners.AddRange(othersWinners.ToList());
+        allWinners.Add(winner);
+        var allCardsInt=allCards.Select(c=>c.Number)
+                        .OrderByDescending(n=>n)
+                        .ToList();
+        foreach(int number in allCardsInt.ToList())
+        {
+            foreach(int numberCombination in listFollowFlush)
+            {
+                if(number==numberCombination)
+                    allCardsInt.Remove(number);
+            }
+        }
+        foreach(int number in allCardsInt)
+        {
+            foreach(Player winnerCompare in allWinners)
+            {
+                // if(winnerCompare.)
+            }
+        }
     }
     public static List<int> IsFollow(List<int> listCardFollow)
     {
