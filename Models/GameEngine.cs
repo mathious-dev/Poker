@@ -4,6 +4,7 @@ namespace Poker.Models;
 
 public class GameEngine
 {
+    public int MainPot { get; set; } = 0;
     public void Init(List<Bot>bots)
     {
         Random randomLevel=new Random();
@@ -20,7 +21,12 @@ public class GameEngine
         foreach(Bot bot in bots)
         {
             Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
+            bot.OnMoneyBet+=AddBetOnMainPot;
         }
+    }
+    public void AddBetOnMainPot(int amountBet)
+    {
+        MainPot+=amountBet;
     }
     public Player SetSettingStartWithCardsAndCheckHumanPlayer(List<Card>listCards,List<Player>players,Player human)
     {
@@ -31,6 +37,7 @@ public class GameEngine
             if(player is not Bot)
             {
                 human=player;
+                human.OnMoneyBet+=AddBetOnMainPot;
             }
         }
         return human;
@@ -53,9 +60,9 @@ public class GameEngine
                 Card.ShowCards(cardsOnTable);
             }
     }
-    public void ShowMainPot(int mainPot)
+    public void ShowMainPot()
     {
-        Console.WriteLine($"\nle pot est de : {mainPot} jetons");
+        Console.WriteLine($"\nle pot est de : {MainPot} jetons");
     }
     
     public int ValidationBetForBotAndPlayerOrBetMore(Player player,List<Player> players,int minBet,ref int counterPlayerplayed)
@@ -64,7 +71,7 @@ public class GameEngine
             player.PlayerSleep(players);  
         else if(player.BetOfTheRound>minBet)
         {
-            minBet+=player.BetOfTheRound;
+            minBet=player.BetOfTheRound;
             counterPlayerplayed=1;
         }
         else
@@ -78,7 +85,6 @@ public class GameEngine
         var listCards=new List<Card>();
         var listCardsOnTable=new List<Card>();
         int handTour=1;
-        int mainPot=0;
         var humanPlayer=new Player();
         listCards=Card.GeneralDeckCard();
         listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
@@ -88,7 +94,7 @@ public class GameEngine
             int countPlayerPlayed=0;
             Console.WriteLine($"\nTour {handTour}");
             humanPlayer.UserCheckCard();
-            ShowMainPot(mainPot);
+            ShowMainPot();
             GiveCardOnTable(handTour,listCards,listCardsOnTable);
             if (allPlayers.Count(p => !p.AllIn) > 1)
             {
@@ -112,7 +118,7 @@ public class GameEngine
                         else
                         {
                             Console.Write("\n Que voulez-vous faire?");
-                            ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
+                            ChoiceUser(minBet,allPlayers,humanPlayer);
                             minBet=ValidationBetForBotAndPlayerOrBetMore(player,allPlayers, minBet,ref countPlayerPlayed);
                         }
                     }
@@ -122,18 +128,19 @@ public class GameEngine
             if(handTour==4||allPlayers.All(p=>p.AllIn))
                 Player.EveryPlayerInGameShowCard(allPlayers);
             handTour++;
-            ShowMainPot(mainPot);
+            ShowMainPot();
         }
         if(allPlayers.Count()==1)
         {
             var winner= new Player();
             winner=allPlayers.First();
-            winner.PlayerWin(mainPot,null,listCardsOnTable);
+            winner.PlayerWin(MainPot,null,listCardsOnTable);
         }
         else
-            WhoWin(allPlayers,listCardsOnTable,mainPot);
+            WhoWin(allPlayers,listCardsOnTable);
+        MainPot=0;
     }
-    public void ChoiceUser(int minBet,int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
+    public void ChoiceUser(int minBet,List<Player>allPlayersInGame,Player humanPlayer)
     {
         bool playerHasBetOrFinish=false;
         int choice=0;
@@ -161,7 +168,7 @@ public class GameEngine
                     else
                         Console.WriteLine($"\n joueur {player.Name} est couché");
                 }
-                Console.WriteLine($"\nLe pot principal est de {mainPot} et la mise minimal est de {minBet}");
+                Console.WriteLine($"\nLe pot principal est de {MainPot} et la mise minimal est de {minBet}");
                 break;
             }
         }
@@ -232,53 +239,53 @@ public class GameEngine
             }
         }
     }
-    public void WhoWin(List<Player> allPlayers,List<Card> mainCards,int mainPot)
+    public void WhoWin(List<Player> allPlayers,List<Card> mainCards)
     {
         string combination;
         var winner = new Player();
         var winners=new List<Player>();
         (winners,winner,combination)=Rule.RuleFollowRoyalFlush(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
     
         (winners,winner,combination)=Rule.RuleFollowFlush(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleSquare(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleFull(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleSameCardColor(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleFollow(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleThreeSameKind(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleDoublePair(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RulePair(allPlayers,mainCards);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
 
         (winners,winner,combination)=Rule.RuleHightCard(allPlayers);
-        if(CheckWinner(winners,winner,combination,mainCards,mainPot))return;
+        if(CheckWinner(winners,winner,combination,mainCards))return;
     }
-    public void OneWinnerOrMore(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable,int mainPot)
+    public void OneWinnerOrMore(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable)
     {
         if(winners.Any())
-            Player.MultiplePLayersWin(mainPot,winners,combination,cardsOnTable);
+            Player.MultiplePLayersWin(MainPot,winners,combination,cardsOnTable);
         else
-            winner.PlayerWin(mainPot,combination,cardsOnTable);
+            winner.PlayerWin(MainPot,combination,cardsOnTable);
     }
-    public bool CheckWinner(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable,int mainPot)
+    public bool CheckWinner(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable)
     {
         if(winner.Name!=null)
         {
-            OneWinnerOrMore(winners,winner,combination,cardsOnTable,mainPot);
+            OneWinnerOrMore(winners,winner,combination,cardsOnTable);
             return true;
         }
         return false;

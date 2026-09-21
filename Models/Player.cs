@@ -15,7 +15,8 @@ public class Player
         if(AmountBet>=Coin)
             this.AllIn=true;
         Coin-=AmountBet;
-
+        //événement
+        OnMoneyBet?.Invoke(AmountBet);
     }
     public void PlayerSleep(List<Player>allPlayers)
     {
