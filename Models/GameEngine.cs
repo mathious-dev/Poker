@@ -37,7 +37,6 @@ public class GameEngine
             if(player is not Bot)
             {
                 human=player;
-                human.OnMoneyBet+=AddBetOnMainPot;
             }
         }
         return human;
@@ -78,7 +77,7 @@ public class GameEngine
             counterPlayerplayed++;
         return minBet;
     }
-    //Corriger la logique des mises car à chaque tour on est obligé de miser le minimum
+
     public void Round(List<Player>allPlayers,int minBet)
     {
         Random randomCard=new Random();

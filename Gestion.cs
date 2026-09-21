@@ -51,6 +51,7 @@ public class Gestion
         player=newPlayer;
         var gameEngine=new GameEngine();
         gameEngine.Init(bots);
+        newPlayer.OnMoneyBet+=gameEngine.AddBetOnMainPot;
         allPlayers.AddRange(bots);
         allPlayers.Add(player);
         allPlayersForRound=allPlayers.ToList();
