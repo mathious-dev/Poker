@@ -68,7 +68,7 @@ public class GameEngine
     }
     public bool VerifPLayerAllIn(Player player)
     {
-        return (player.allIn);
+        return (player.AllIn);
     }
     public void ShowMainPot(int mainPot)
     {
@@ -93,24 +93,24 @@ public class GameEngine
             humanPlayer.UserCheckCard();
             ShowMainPot(mainPot);
             GiveCardOnTable(handTour,listCards,listCardsOnTable);
-            if (allPlayers.Count(p => !p.allIn) > 1)
+            if (allPlayers.Count(p => !p.AllIn) > 1)
             {
                 while(allPlayers.Count()>countPlayerPlayed)
                 {
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
-                         if (VerifNumberPlayer(allPlayers,countPlayerPlayed))
+                        if (VerifNumberPlayer(allPlayers,countPlayerPlayed))
                             break;
                         if(VerifPLayerAllIn(player))
                         {
-                                countPlayerPlayed++;
-                                continue;// On passe directement au joueur suivant
+                            countPlayerPlayed++;
+                            continue;// On passe directement au joueur suivant
                         }
                         if(player is Bot bot)
                         {
                             int betFromBot=bot.BotAction(minBet,listCardsOnTable);
-                            if(!bot.allIn&&(betFromBot<minBet||betFromBot==0))
+                            if(!bot.AllIn&&(betFromBot<minBet||betFromBot==0))
                                 bot.PlayerSleep(allPlayers);   
                             else if(betFromBot>minBet)
                             {
@@ -125,7 +125,7 @@ public class GameEngine
                         {
                             Console.Write("\n Que voulez-vous faire?");
                             int amountBet=ChoiceUser(minBet,mainPot,allPlayers,humanPlayer);
-                            if(!humanPlayer.allIn&&(amountBet<minBet||amountBet==0))
+                            if(!humanPlayer.AllIn&&(amountBet<minBet||amountBet==0))
                                 humanPlayer.PlayerSleep(allPlayers);   
                             else if(amountBet>minBet)
                             {
@@ -139,7 +139,7 @@ public class GameEngine
                     }
                 }
             }
-            if(handTour==4||allPlayers.All(p=>p.allIn))
+            if(handTour==4||allPlayers.All(p=>p.AllIn))
                 Player.EveryPlayerInGameShowCard(allPlayers);
             handTour++;
             ShowMainPot(mainPot);
@@ -153,7 +153,6 @@ public class GameEngine
         else
             WhoWin(allPlayers,listCardsOnTable,mainPot);
     }
-    //ajouter option pour suivre et pareil pour les bots
     public int ChoiceUser(int minBet,int mainPot,List<Player>allPlayersInGame,Player humanPlayer)
     {
         bool playerHasBetOrFinish=false;
@@ -198,14 +197,14 @@ public class GameEngine
         while(!finish)
         {
             int stop=0;
-            int allInChoice=0;
+            int AllInChoice=0;
             if(minBet>humanPlayer.Coin)
             {
                 Console.WriteLine($"\nLe minimum a miser est de {minBet}, ce qui est supérieur à votre pot {humanPlayer.Coin} Voulez-vous all-in? \n1.OUI\n2.NON, vous vous couchez");
-                while(allInChoice!=1&&allInChoice!=2)
+                while(AllInChoice!=1&&AllInChoice!=2)
                 {
-                    allInChoice=Gestion.IntEnter();
-                    if(allInChoice==1)
+                    AllInChoice=Gestion.IntEnter();
+                    if(AllInChoice==1)
                     {
                         amountBet=humanPlayer.PlayerAllIn();
                         hasBetOrFinish=true;
@@ -213,7 +212,7 @@ public class GameEngine
                         finish=true;
                     }
                         
-                    else if(allInChoice==2)
+                    else if(AllInChoice==2)
                     {
                         humanPlayer.PlayerSleep(allPlayersInGame);
                         hasBetOrFinish=true;

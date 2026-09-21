@@ -6,13 +6,13 @@ public class Player
     public int Coin{get;set;}=1000;
     public int BetOfTheRound{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
-    public bool allIn{get;set;}=false;
+    public bool AllIn{get;set;}=false;
     public int Bet(int AmountBet)
     {
         BetOfTheRound+=AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
-        if(AmountBet==Coin)
-            this.allIn=true;
+        if(AmountBet>=Coin)
+            this.AllIn=true;
         Coin-=AmountBet;
         return AmountBet;
     }
@@ -56,21 +56,19 @@ public class Player
     {
         int amountBet=Bet(this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
-        this.allIn=true;
+        this.AllIn=true;
         return amountBet;
     }
     public void PlayerWin(int amountWin,string? combination,List<Card>mainCards)
     {
-        var allCards=new List<Card>();
-        allCards=Rule.GroupCards(this.Deck,mainCards);
         this.Coin+=amountWin;
         Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
         if(combination!=null)
+        {
             Console.WriteLine($"et avec la combinaison {combination}");
-        
-        Card.ShowCards(mainCards);
-        Card.ShowCards(this.Deck);
-        
+            Card.ShowCards(mainCards);
+            Card.ShowCards(this.Deck);
+        }  
     }
     public static void MultiplePLayersWin(int mainPot,List<Player>winners,string? combination,List<Card>mainCards)
     {
@@ -81,16 +79,21 @@ public class Player
             winner.PlayerWin(amount,combination,mainCards);
         }
     }
+    /*
+    *méthode si le joueur suit*
+    *On prend en compte le fait qu'il faut soustraire ce qu'il doit miser sinon il va miser en trop*
+    */
     public int FollowBet(int minBet)
     {
-        if(minBet>=this.Coin)
-            minBet=this.PlayerAllIn();
+        int amountToCall=minBet-this.BetOfTheRound;
+        if(amountToCall>=this.Coin)
+            return this.PlayerAllIn();
         else
         {
             Console.WriteLine($"\nLe joueur {this.Name} suit");
-            Bet(minBet);
+            Bet(amountToCall);
         }
-        return minBet;
+        return amountToCall;
     }
     public static void EveryPlayerInGameShowCard(List<Player> players)
     {
@@ -99,8 +102,17 @@ public class Player
             player.UserCheckCard();
         }
     }
-    // public void FollowBet(int amount)
-    // {
-    //     Bet(amount);
-    // }
+    /*
+    *Si le joueur décide de suivre en n'augmentant pas la mise*
+    *Il faut aussi prendre en compte que le minimum à miser peut-être supérieur à tout ce que le joueur est capable de miser si jamais un autre joueur a beaucoup plus de jetons*
+    */
+    public static bool IsPlayerFollowingWithNoMoreBet(Player player,int minBet)
+    {
+        if(player.BetOfTheRound==minBet||player.AllIn==true)
+        {
+            return true;
+        }
+        return false;
+    }
+    
 }

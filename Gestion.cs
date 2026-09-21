@@ -68,7 +68,7 @@ public class Gestion
             allPlayersForRound=allPlayers.ToList();
             foreach(Player player in allPlayersForRound)
             {
-                player.allIn=false;
+                player.AllIn=false;
                 player.BetOfTheRound=0;
             }
         }
