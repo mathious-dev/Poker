@@ -18,14 +18,13 @@ public class Bot : Player
     {
         this.Level=level;
     }
-    public override int PlayerAllIn()
+    public override void PlayerAllIn()
     {
-        int amountBet=Bet(this.Coin);
+        Bet(this.Coin);
         Console.WriteLine($"\nLe bot {this.Name} fait tapis !");
         this.AllIn=true;
-        return amountBet;
     }
-    public int BotAction(int minBetOnTable,List<Card>?cards)
+    public void BotAction(int minBetOnTable,List<Card>?cards)
     {
         var (combinationStart,highestValue)=EvaluateDeck(this.Deck,cards);
         int amountBet=DeclarationOfAction( this.Level, highestValue, combinationStart, this.Coin,minBetOnTable);
@@ -36,8 +35,6 @@ public class Bot : Player
             else
                 Bet(amountBet);
         }
-            
-        return amountBet;
     }
     public (int,int) EvaluateDeck(Card[] cardsOfBot,List<Card>?cardsOnTable)
     {

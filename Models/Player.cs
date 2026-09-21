@@ -1,20 +1,21 @@
 ﻿namespace Poker.Models;
-
+using System;
 public class Player
 {
+    public event Action<int> OnMoneyBet;
     public string Name{get;set;}
     public int Coin{get;set;}=1000;
     public int BetOfTheRound{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
     public bool AllIn{get;set;}=false;
-    public int Bet(int AmountBet)
+    public void Bet(int AmountBet)
     {
         BetOfTheRound+=AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
         if(AmountBet>=Coin)
             this.AllIn=true;
         Coin-=AmountBet;
-        return AmountBet;
+
     }
     public void PlayerSleep(List<Player>allPlayers)
     {
@@ -52,12 +53,11 @@ public class Player
         }
         return newListPlayer;
     }
-    public virtual int PlayerAllIn()
+    public virtual void PlayerAllIn()
     {
-        int amountBet=Bet(this.Coin);
+        Bet(this.Coin);
         Console.WriteLine("\nVous avez tout miser !" );
         this.AllIn=true;
-        return amountBet;
     }
     public void PlayerWin(int amountWin,string? combination,List<Card>mainCards)
     {
@@ -87,7 +87,7 @@ public class Player
     {
         int amountToCall=minBet-this.BetOfTheRound;
         if(amountToCall>=this.Coin)
-            return this.PlayerAllIn();
+            this.PlayerAllIn();
         else
         {
             Console.WriteLine($"\nLe joueur {this.Name} suit");
