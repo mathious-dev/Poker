@@ -69,7 +69,7 @@ public class Rule
                     if(listSameKind.First()>highestValueFirstPair)
                     {
                         highestValueFirstPair=listSameKind.First();
-                        highestValueSecondPair= listSameKind.Last();
+                        highestValueSecondPair=listSameKind[1];
                         winner=player;
                         othersWinners.Clear();
                     }
