@@ -80,13 +80,14 @@ public class GameEngine
         return minBet;
     }
 
-    public void Round(List<Player>allPlayers,int minBet)
+    public void Round(List<Player>allPlayers,int minBet,int indexBigBindPlayer)
     {
         Random randomCard=new Random();
         var listCards=new List<Card>();
         var listCardsOnTable=new List<Card>();
         int handTour=1;
         var humanPlayer=new Player();
+        var firstPlayerToPlay=new Player();
         listCards=Card.GeneralDeckCard();
         listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
         humanPlayer=SetSettingStartWithCardsAndCheckHumanPlayer(listCards,allPlayers,humanPlayer);
@@ -101,6 +102,20 @@ public class GameEngine
             {
                 while(allPlayers.Count()>countPlayerPlayed&& allPlayers.Count() > 1)
                 {
+                    if(handTour==1)
+                    {
+                        if(indexBigBindPlayer==allPlayers.Count()-1)
+                            allPlayers=allPlayers.Skip(0)
+                                            .Concat(allPlayers.Take(indexBigBindPlayer))
+                                            .ToList();
+                        else
+                            allPlayers=allPlayers.Skip(indexBigBindPlayer+1)
+                                                .Concat(allPlayers.Take(indexBigBindPlayer+1))
+                                                .ToList();
+                        allPlayers.Last().Bet(minBet);
+                        allPlayers[allPlayers.Count()-2].Bet(minBet/2);
+                    }
+                        
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
@@ -111,6 +126,7 @@ public class GameEngine
                             countPlayerPlayed++;
                             continue;// On passe directement au joueur suivant
                         }
+                        
                         if(player is Bot bot)
                         {
                             bot.BotAction(minBet,listCardsOnTable);
