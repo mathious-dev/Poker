@@ -17,7 +17,7 @@ public class GameEngine
         bots.Add(bot1);
         bots.Add(bot2);
         bots.Add(bot3);
-        Console.ForegroundColor=ConsoleColor.Red;
+        Console.ForegroundColor=ConsoleColor.Green;
         Console.WriteLine("\nCommencement de la partie.");
         foreach(Bot bot in bots)
         {
@@ -63,6 +63,7 @@ public class GameEngine
     }
     public void ShowMainPot()
     {
+        Console.ForegroundColor=ConsoleColor.Blue;
         Console.WriteLine($"\nle pot est de : {MainPot} jetons");
     }
     
@@ -94,7 +95,9 @@ public class GameEngine
         while(handTour<5 &&allPlayers.Count()>1)
         {
             int countPlayerPlayed=0;
+            Console.ForegroundColor=ConsoleColor.DarkBlue;
             Console.WriteLine($"\n______________________________\nTour {handTour}");
+            Console.ResetColor();
             if(humanPlayer.Name!=null)//si l'humain est toujours là 
                 humanPlayer.UserCheckCard();
             GiveCardOnTable(handTour,listCards,listCardsOnTable);

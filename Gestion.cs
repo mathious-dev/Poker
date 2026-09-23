@@ -55,11 +55,13 @@ public class Gestion
         newPlayer.OnMoneyBet+=gameEngine.AddBetOnMainPot;
         allPlayers.AddRange(bots);
         allPlayers.Add(player);
-        while(allPlayers.Count()>1)
+        while(allPlayers.Count()>1&&allPlayers.Contains(player))
         {
             if(countRound==1)
                 indexPlayerBigBind=randomBigBinder.Next(0,allPlayers.Count());
+            Console.ForegroundColor=ConsoleColor.DarkBlue;    
             Console.WriteLine($"\n|||||||||||||||||||||||||||||||||||||||||||\nRound : {countRound}");
+            Console.ResetColor();
             gameEngine.Round(allPlayers,minBet,indexPlayerBigBind);//quand tous les tours sont finis
             if(indexPlayerBigBind+1<allPlayers.Count()-1)
                 indexPlayerBigBind++;
@@ -90,6 +92,19 @@ public class Gestion
                 player.AllIn=false;
                 player.BetOfTheRound=0;
             }
+        }
+        if(!allPlayers.Contains(player))
+        {
+            Console.ForegroundColor=ConsoleColor.Red;
+            Console.WriteLine("Game Over. Vous avez perdu");
+            Console.ResetColor();
+        }
+            
+        else
+        {
+            Console.ForegroundColor=ConsoleColor.Cyan;
+            Console.WriteLine("Félicitations. Vous avez gagné");
+            Console.ResetColor();
         }
         countRound=1;
     }

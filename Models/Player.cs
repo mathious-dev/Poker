@@ -66,11 +66,7 @@ public class Player
         this.Coin+=amountWin;
         Console.WriteLine($"\nLe joueur {this.Name} a gagné avec {amountWin}");
         if(combination!=null)
-        {
             Console.WriteLine($"et avec la combinaison {combination}");
-            Card.ShowCards(mainCards);
-            Card.ShowCards(this.Deck);
-        }  
     }
     public static void MultiplePLayersWin(int mainPot,List<Player>winners,string? combination,List<Card>mainCards)
     {
