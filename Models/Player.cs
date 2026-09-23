@@ -77,11 +77,18 @@ public class Player
         allWinners.Add(winner);
         int countPlayer=allWinners.Count();
         int amount=mainPot/countPlayer;
+        int lastCoins=mainPot % countPlayer;
         foreach(Player player in allWinners )
         {
             Console.WriteLine($"\n{countPlayer} joueurs ont gagné, le pot est donc partagé");
             player.PlayerWin(amount,combination,mainCards);
         }
+        if(lastCoins>0)
+        {
+            winner.Coin+=lastCoins;
+            Console.WriteLine($"\n le gagnant principal {winner} reçoit les jetons restants qui sont de {lastCoins} jetons");
+        }
+            
     }
     /*
     *méthode si le joueur suit*
