@@ -20,7 +20,7 @@ public class UnitTest1
             Name="Benoit",
             Deck =
             [
-                new(5){Type=TypeCard.Pique},
+                new(6){Type=TypeCard.Pique},
                 new(14){Type=TypeCard.Carreau}
             ]
         };
@@ -30,13 +30,13 @@ public class UnitTest1
         var listCard=new List<Card>()
         {
             new Card(10) {  Type = TypeCard.Pique },
-            new Card(3) { Type = TypeCard.Trefle },
-            new Card(4) {  Type = TypeCard.Coeur },
-            new Card(5) {  Type = TypeCard.Coeur },
+            new Card(10) { Type = TypeCard.Trefle },
+            new Card(10) {  Type = TypeCard.Coeur },
+            new Card(8) {  Type = TypeCard.Coeur },
             new Card(10) { Type = TypeCard.Coeur }
         };
         //Act
-        (var othersWinners,var winner,var combination) =Rule.RuleDoublePair(listPlayer,listCard);
+        (var othersWinners,var winner,var combination) =Rule.RuleSquare(listPlayer,listCard);
         System.Console.WriteLine($"Le gagnat est : {winner} avec une combinaison de {combination}");
         
         //Assert

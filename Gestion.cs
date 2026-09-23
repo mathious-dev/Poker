@@ -36,12 +36,13 @@ public class Gestion
     }
     public void StartGame()
     {
+        int indexPlayerBind=0;
         int minBet=50;
         int countRound=1;
         var newPlayer=new Player();
         var allPlayers=new List<Player>();
-        var allPlayersForRound=new List<Player>();
         string name=null;
+        Random randomBinder=new Random();
         while(string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("\nQuelle est votre nom? ");
@@ -54,11 +55,14 @@ public class Gestion
         newPlayer.OnMoneyBet+=gameEngine.AddBetOnMainPot;
         allPlayers.AddRange(bots);
         allPlayers.Add(player);
-        allPlayersForRound=allPlayers.ToList();
         while(allPlayers.Count()>1)
         {
-            Console.WriteLine($"\nRound : {countRound}");
-            gameEngine.Round(allPlayersForRound,minBet);//quand tous les tours sont finis
+            if(countRound==1)
+                indexPlayerBind=randomBinder.Next(allPlayers.Count());
+            allPlayers[indexPlayerBind].BigBind=true;
+            allPlayers[indexPlayerBind-1].SmallBind=true;
+            Console.WriteLine($"\n|||||||||||||||||||||||||||||||||||||||||||\nRound : {countRound}");
+            gameEngine.Round(allPlayers,minBet);//quand tous les tours sont finis
             countRound++;
             allPlayers=Player.RemoveLoserPlayer(allPlayers);
             double newBetMin=countRound/10;
@@ -66,12 +70,17 @@ public class Gestion
                 minBet=50;
             else
                 minBet=50*((int)newBetMin+1);
-            allPlayersForRound=allPlayers.ToList();
-            foreach(Player player in allPlayersForRound)
+            foreach(Player player in allPlayers)
             {
                 player.AllIn=false;
                 player.BetOfTheRound=0;
+                player.BigBind=false;
+                player.SmallBind=false;
             }
+            if(indexPlayerBind<allPlayers.Count()-1)
+                indexPlayerBind++;
+            else
+                indexPlayerBind=0;
         }
         countRound=1;
     }

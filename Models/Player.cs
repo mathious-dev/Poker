@@ -8,6 +8,8 @@ public class Player
     public int BetOfTheRound{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
     public bool AllIn{get;set;}=false;
+    public bool BigBind{get;set;}=false;
+    public bool SmallBind{get;set;}=false;
     public void Bet(int AmountBet)
     {
         BetOfTheRound+=AmountBet;

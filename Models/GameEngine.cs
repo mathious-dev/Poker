@@ -93,7 +93,7 @@ public class GameEngine
         while(handTour<5 &&allPlayers.Count()>1)
         {
             int countPlayerPlayed=0;
-            Console.WriteLine($"\nTour {handTour}");
+            Console.WriteLine($"\n______________________________\nTour {handTour}");
             if(humanPlayer.Name!=null)//si l'humain est toujours là 
                 humanPlayer.UserCheckCard();
             GiveCardOnTable(handTour,listCards,listCardsOnTable);
