@@ -21,7 +21,7 @@ public class GameEngine
         Console.WriteLine("\nCommencement de la partie.");
         foreach(Bot bot in bots)
         {
-            Console.WriteLine($"\nLe bot {bot.Name}a rejoint la partie");
+            Console.WriteLine($"\nLe bot {bot.Name} a rejoint la partie");
             bot.OnMoneyBet+=AddBetOnMainPot;
         }
         Console.ResetColor();
@@ -69,11 +69,11 @@ public class GameEngine
     
     public int ValidationBetForBotAndPlayerOrBetMore(Player player,List<Player> players,int minBet,ref int counterPlayerplayed)
     {
-        if(!player.AllIn&&player.BetOfTheRound<minBet)
+        if(!player.AllIn&&player.BetOfTheTour<minBet)
             player.PlayerSleep(players);  
-        else if(player.BetOfTheRound>minBet)
+        else if(player.BetOfTheTour>minBet)
         {
-            minBet=player.BetOfTheRound;
+            minBet=player.BetOfTheTour;
             counterPlayerplayed=1;
         }
         else
@@ -92,6 +92,7 @@ public class GameEngine
         listCards=Card.GeneralDeckCard();
         listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
         humanPlayer=SetSettingStartWithCardsAndCheckHumanPlayer(listCards,allPlayers,humanPlayer);
+        
         while(handTour<5 &&allPlayers.Count()>1)
         {
             int countPlayerPlayed=0;
@@ -103,20 +104,19 @@ public class GameEngine
             GiveCardOnTable(handTour,listCards,listCardsOnTable);
             if (allPlayers.Count(p => !p.AllIn) > 1)
             {
+                if(handTour==1)
+                {
+                    if(indexBigBindPlayer<allPlayers.Count()-1)
+                    {
+                        allPlayers=allPlayers.Skip(indexBigBindPlayer+1)
+                                            .Concat(allPlayers.Take(indexBigBindPlayer+1))
+                                            .ToList();   
+                    }
+                    allPlayers.Last().Bet(minBet);
+                    allPlayers[allPlayers.Count()-2].Bet(minBet/2);
+                }
                 while(allPlayers.Count()>countPlayerPlayed&& allPlayers.Count() > 1)
                 {
-                    if(handTour==1)
-                    {
-                        if(indexBigBindPlayer<allPlayers.Count()-1)
-                        {
-                            allPlayers=allPlayers.Skip(indexBigBindPlayer+1)
-                                                .Concat(allPlayers.Take(indexBigBindPlayer+1))
-                                                .ToList();   
-                        }
-                        allPlayers.Last().Bet(minBet);
-                        allPlayers[allPlayers.Count()-2].Bet(minBet/2);
-                    }
-                    
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
@@ -127,7 +127,6 @@ public class GameEngine
                             countPlayerPlayed++;
                             continue;// On passe directement au joueur suivant
                         }
-                        
                         if(player is Bot bot)
                         {
                             bot.BotAction(minBet,listCardsOnTable);
@@ -145,6 +144,10 @@ public class GameEngine
             if(handTour==4||allPlayers.All(p=>p.AllIn))
                 Player.EveryPlayerInGameShowCard(allPlayers);
             handTour++;
+            foreach(Player p in allPlayers)
+            {
+                p.BetOfTheTour = 0;
+            }
             ShowMainPot();
         }
         if(allPlayers.Count()==1)
@@ -300,7 +303,7 @@ public class GameEngine
     public void OneWinnerOrMore(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable)
     {
         if(winners.Any())
-            Player.MultiplePLayersWin(MainPot,winners,combination,cardsOnTable);
+            Player.MultiplePLayersWin(MainPot,winners,winner,combination,cardsOnTable);
         else
             winner.PlayerWin(MainPot,combination,cardsOnTable);
     }

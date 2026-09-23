@@ -37,7 +37,7 @@ public class UnitTest1
         };
         //Act
         (var othersWinners,var winner,var combination) =Rule.RuleSquare(listPlayer,listCard);
-        System.Console.WriteLine($"Le gagnat est : {winner} avec une combinaison de {combination}");
+        
         
         //Assert
         Assert.Equal(player2,winner);

@@ -6,12 +6,14 @@ public class Player
     public string Name{get;set;}
     public int Coin{get;set;}=1000;
     public int BetOfTheRound{get;set;}=0;
+    public int BetOfTheTour{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
     public bool AllIn{get;set;}=false;
 
     public void Bet(int AmountBet)
     {
-        BetOfTheRound+=AmountBet;
+        BetOfTheTour += AmountBet;  
+        BetOfTheRound += AmountBet;
         Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
         if(AmountBet>=Coin)
             this.AllIn=true;
@@ -51,7 +53,7 @@ public class Player
             if(player.Coin>0)
                 newListPlayer.Add(player);
             else
-               Console.WriteLine($"\nLe joueur {player.Name} est éliminé"); 
+                Console.WriteLine($"\nLe joueur {player.Name} est éliminé"); 
         }
         return newListPlayer;
     }
@@ -68,13 +70,17 @@ public class Player
         if(combination!=null)
             Console.WriteLine($"et avec la combinaison {combination}");
     }
-    public static void MultiplePLayersWin(int mainPot,List<Player>winners,string? combination,List<Card>mainCards)
+    public static void MultiplePLayersWin(int mainPot,List<Player>othersWinners,Player winner,string? combination,List<Card>mainCards)
     {
-        int countPlayer=winners.Count();
+        var allWinners=new List<Player>();
+        allWinners.AddRange(othersWinners);
+        allWinners.Add(winner);
+        int countPlayer=allWinners.Count();
         int amount=mainPot/countPlayer;
-        foreach(Player winner in winners )
+        foreach(Player player in allWinners )
         {
-            winner.PlayerWin(amount,combination,mainCards);
+            Console.WriteLine($"\n{countPlayer} joueurs ont gagné, le pot est donc partagé");
+            player.PlayerWin(amount,combination,mainCards);
         }
     }
     /*

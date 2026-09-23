@@ -32,7 +32,6 @@ public class Gestion
                 case 3: Console.WriteLine("Fin du jeu");break;
             }
         }
-        
     }
     public void StartGame()
     {
@@ -43,6 +42,7 @@ public class Gestion
         var allPlayers=new List<Player>();
         string name=null;
         Random randomBigBinder=new Random();
+
         while(string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("\nQuelle est votre nom? ");
@@ -55,7 +55,13 @@ public class Gestion
         newPlayer.OnMoneyBet+=gameEngine.AddBetOnMainPot;
         allPlayers.AddRange(bots);
         allPlayers.Add(player);
-        while(allPlayers.Count()>1&&allPlayers.Contains(player))
+        Game(allPlayers,player,indexPlayerBigBind,minBet,countRound,randomBigBinder,gameEngine);
+        bots.Clear();
+        countRound=1;
+    }
+    public void Game(List<Player>allPlayers,Player player,int indexPlayerBigBind,int minBet,int countRound,Random randomBigBinder,GameEngine gameEngine)
+    {
+        while(allPlayers.Count(p=>p.Coin>0)>1&&allPlayers.Contains(player))
         {
             if(countRound==1)
                 indexPlayerBigBind=randomBigBinder.Next(0,allPlayers.Count());
@@ -87,10 +93,10 @@ public class Gestion
                 minBet=50;
             else
                 minBet=50*((int)newBetMin+1);
-            foreach(Player player in allPlayers)
+            foreach(Player p in allPlayers)
             {
-                player.AllIn=false;
-                player.BetOfTheRound=0;
+                p.AllIn=false;
+                p.BetOfTheRound=0;
             }
         }
         if(!allPlayers.Contains(player))
@@ -106,11 +112,6 @@ public class Gestion
             Console.WriteLine("Félicitations. Vous avez gagné");
             Console.ResetColor();
         }
-        countRound=1;
-    }
-    public void Game()
-    {
-        
     }
     public void Test()
     {
