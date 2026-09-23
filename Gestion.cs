@@ -36,7 +36,7 @@ public class Gestion
     }
     public void StartGame()
     {
-        int indexPlayerBind=0;
+        int indexPlayerBigBind=0;
         int minBet=50;
         int countRound=1;
         var newPlayer=new Player();
@@ -58,22 +58,22 @@ public class Gestion
         while(allPlayers.Count()>1)
         {
             if(countRound==1)
-                indexPlayerBind=randomBigBinder.Next(0,allPlayers.Count());
+                indexPlayerBigBind=randomBigBinder.Next(0,allPlayers.Count());
             Console.WriteLine($"\n|||||||||||||||||||||||||||||||||||||||||||\nRound : {countRound}");
-            gameEngine.Round(allPlayers,minBet,indexPlayerBind);//quand tous les tours sont finis
-            if(indexPlayerBind+1<allPlayers.Count()-1)
-                indexPlayerBind++;
+            gameEngine.Round(allPlayers,minBet,indexPlayerBigBind);//quand tous les tours sont finis
+            if(indexPlayerBigBind+1<allPlayers.Count()-1)
+                indexPlayerBigBind++;
             else
-                indexPlayerBind=0;
+                indexPlayerBigBind=0;
             bool findBigBindPlayer=false;
             while(!findBigBindPlayer)
             {
-                if(allPlayers[indexPlayerBind].Coin<=0)
+                if(allPlayers[indexPlayerBigBind].Coin<=0)
                 {
-                    if(indexPlayerBind>=allPlayers.Count()-1)
-                        indexPlayerBind=0;
+                    if(indexPlayerBigBind>=allPlayers.Count()-1)
+                        indexPlayerBigBind=0;
                     else
-                        indexPlayerBind++;
+                        indexPlayerBigBind++;
                 }
                 else
                     findBigBindPlayer=true;

@@ -104,18 +104,16 @@ public class GameEngine
                 {
                     if(handTour==1)
                     {
-                        if(indexBigBindPlayer==allPlayers.Count()-1)
-                            allPlayers=allPlayers.Skip(0)
-                                            .Concat(allPlayers.Take(indexBigBindPlayer))
-                                            .ToList();
-                        else
+                        if(indexBigBindPlayer<allPlayers.Count()-1)
+                        {
                             allPlayers=allPlayers.Skip(indexBigBindPlayer+1)
                                                 .Concat(allPlayers.Take(indexBigBindPlayer+1))
-                                                .ToList();
+                                                .ToList();   
+                        }
                         allPlayers.Last().Bet(minBet);
                         allPlayers[allPlayers.Count()-2].Bet(minBet/2);
                     }
-                        
+                    
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
