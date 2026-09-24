@@ -18,7 +18,7 @@ public class Gestion
         while(choice!=3)
         {
             int i=1;
-            string[] options={"Jouer","Tester","Quitter"};
+            string[] options={"Jouer","Voir les combinaisons possibles","Quitter"};
             foreach(string option in options)
             {
                 Console.WriteLine($"{i}.{option}");
@@ -28,7 +28,7 @@ public class Gestion
             switch(choice)
             {
                 case 1: StartGame();break;
-                case 2: Test();break;
+                case 2: Combinations();break;
                 case 3: Console.WriteLine("Fin du jeu");break;
             }
         }
@@ -110,6 +110,22 @@ public class Gestion
             Console.ForegroundColor=ConsoleColor.Cyan;
             Console.WriteLine("Félicitations. Vous avez gagné");
             Console.ResetColor();
+        }
+    }
+    public void Combinations()
+    {
+        for(int i=1;i<11;i++)
+        {
+            Console.WriteLine($"\n{i}.Flush Royale\nUne suite de même couleur allant de l'As jusqu'au valet\n");
+            Console.WriteLine($"\n{i}.Suite Flush\nUne suite allant de l'As jusqu'au valet\n");
+            Console.WriteLine($"\n{i}.Carré\n");
+            Console.WriteLine($"\n{i}.Full\n");
+            Console.WriteLine($"\n{i}.Couleur\n");
+            Console.WriteLine($"\n{i}.Suite\n");
+            Console.WriteLine($"\n{i}.Brelan\n");
+            Console.WriteLine($"\n{i}.Double pair");
+            Console.WriteLine($"\n{i}.Paire\n");
+            Console.WriteLine($"\n{i}.Carte Haute\n");
         }
     }
     public void Test()
