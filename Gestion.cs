@@ -68,7 +68,7 @@ public class Gestion
             Console.ForegroundColor=ConsoleColor.DarkBlue;    
             Console.WriteLine($"\n|||||||||||||||||||||||||||||||||||||||||||\nRound : {countRound}");
             Console.ResetColor();
-            gameEngine.Round(allPlayers,minBet,indexPlayerBigBind);//quand tous les tours sont finis
+            gameEngine.Round(allPlayers,minBet,indexPlayerBigBind,player);//quand tous les tours sont finis
             if(indexPlayerBigBind+1<allPlayers.Count()-1)
                 indexPlayerBigBind++;
             else

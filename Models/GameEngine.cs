@@ -30,19 +30,6 @@ public class GameEngine
     {
         MainPot+=amountBet;
     }
-    public Player SetSettingStartWithCardsAndCheckHumanPlayer(List<Card>listCards,List<Player>players,Player human)
-    {
-        foreach(Player player in players)
-        {
-            var (FirstCard,SecondCard)=GiveCardsStart(listCards);
-            player.Deck=[FirstCard,SecondCard];
-            if(player is not Bot)
-            {
-                human=player;
-            }
-        }
-        return human;
-    }
     public void GiveCardOnTable(int handTour,List<Card> generalDeckCards,List<Card>cardsOnTable)
     {
         if(handTour==2)
@@ -82,18 +69,16 @@ public class GameEngine
         return minBet;
     }
 
-    public void Round(List<Player>allPlayers,int minBet,int indexBigBindPlayer)
+    public void Round(List<Player>allPlayers,int minBet,int indexBigBindPlayer,Player humanPlayer)
     {
         Random randomCard=new Random();
         var listCards=new List<Card>();
         var listCardsOnTable=new List<Card>();
         int handTour=1;
-        var humanPlayer=new Player();
         var firstPlayerToPlay=new Player();
         listCards=Card.GeneralDeckCard();
         listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
-        humanPlayer=SetSettingStartWithCardsAndCheckHumanPlayer(listCards,allPlayers,humanPlayer);
-        
+        GiveCardsStart(allPlayers,listCards);
         while(handTour<5 &&allPlayers.Count()>1)
         {
             int countPlayerPlayed=0;
@@ -317,13 +302,16 @@ public class GameEngine
         }
         return false;
     }
-    public (Card,Card) GiveCardsStart(List<Card> listCards)
+    public void GiveCardsStart(List<Player>allPlayers,List<Card> listGeneralCards)
     {
-        var FirstCard=listCards[0];
-        listCards.RemoveAt(0);
-        var SecondCard=listCards[0];
-        listCards.RemoveAt(0);
-        return (FirstCard,SecondCard);
+        foreach(Player player in allPlayers)
+        {
+            var firstCard=listGeneralCards.First();
+            listGeneralCards.RemoveAt(0);
+            var secondCard=listGeneralCards.First();
+            listGeneralCards.RemoveAt(0);
+            player.Deck=[firstCard,secondCard];
+        }
     }
     public Card GiveCard(List<Card> listCards)
     {
