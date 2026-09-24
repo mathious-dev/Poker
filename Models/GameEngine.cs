@@ -65,6 +65,7 @@ public class GameEngine
     {
         Console.ForegroundColor=ConsoleColor.Blue;
         Console.WriteLine($"\nle pot est de : {MainPot} jetons");
+        Console.ResetColor();
     }
     
     public int ValidationBetForBotAndPlayerOrBetMore(Player player,List<Player> players,int minBet,ref int counterPlayerplayed)
