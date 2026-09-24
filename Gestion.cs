@@ -21,7 +21,7 @@ public class Gestion
             string[] options={"Jouer","Voir les combinaisons possibles","Quitter"};
             foreach(string option in options)
             {
-                Console.WriteLine($"{i}.{option}");
+                Console.WriteLine($"\n{i}.{option}");
                 i++;
             }
             choice=IntEnter();
@@ -114,80 +114,17 @@ public class Gestion
     }
     public void Combinations()
     {
-        for(int i=1;i<11;i++)
-        {
-            Console.WriteLine($"\n{i}.Flush Royale\nUne suite de même couleur allant de l'As jusqu'au valet\n");
-            Console.WriteLine($"\n{i}.Suite Flush\nUne suite allant de l'As jusqu'au valet\n");
-            Console.WriteLine($"\n{i}.Carré\n");
-            Console.WriteLine($"\n{i}.Full\n");
-            Console.WriteLine($"\n{i}.Couleur\n");
-            Console.WriteLine($"\n{i}.Suite\n");
-            Console.WriteLine($"\n{i}.Brelan\n");
-            Console.WriteLine($"\n{i}.Double pair");
-            Console.WriteLine($"\n{i}.Paire\n");
-            Console.WriteLine($"\n{i}.Carte Haute\n");
-        }
-    }
-    public void Test()
-    {
-        string combination;
-        var listGagnant=new List<Player>();
-        var listPlayers=new List<Player>();
-        var winner=new Player();
-        var player1=new Player
-        {
-            Name="Math",
-            Deck=[
-                new (11) {  Type = TypeCard.Coeur },
-                new (2) { Type = TypeCard.Coeur }
-            ]
+        Console.WriteLine($"\n1.Flush Royale\nUne suite de chiffre de même couleur allant de l'As jusqu'au valet.\nExemple : ");
+        Console.WriteLine($"\n2.Suite Flush\nUne suite de chiffre allant de l'As jusqu'au valet.\nExemple : ");
+        Console.WriteLine($"\n3.Carré\n4 cartes du même chiffre.\nExemple : ");
+        Console.WriteLine($"\n4.Full\n3 cartes du même chiffre avec une paire.\nExemple : ");
+        Console.WriteLine($"\n5.Couleur\nToutes les cartes ont la même couleur.\nExemple : ");
+        Console.WriteLine($"\n6.Suite\nUne suite de chiffre.\nExemple : ");
+        Console.WriteLine($"\n7.Brelan\n3 cartes du même chiffre.\nExemple : ");
+        Console.WriteLine($"\n8.Double paire\n2 paires donc 2 fois des cartes du même chiffre.\nExemple : ");
+        Console.WriteLine($"\n9.Paire\n2 cartes du même chiffre.\nExemple : ");
+        Console.WriteLine($"\n10.Carte Haute\nLa carte la plus haute de votre deck.\nExemple : ");
 
-        };
-        var player2=new Player()
-        {
-            Name="François",
-            Deck=new Card[]
-            {
-                new Card(14) {  Type = TypeCard.Coeur },
-                new Card(2) { Type = TypeCard.Coeur }
-            }
-        };
-        var player3=new Player()
-        {
-            Name="Michel",
-            Deck=new Card[]
-            {
-                new Card(10) {  Type = TypeCard.Coeur },
-                new Card(10) {  Type = TypeCard.Pique }
-            }
-        };
-        listPlayers.Add(player1);
-        listPlayers.Add(player2);
-        listPlayers.Add(player3);
-        var listCard=new List<Card>()
-        {
-            new Card(10) {  Type = TypeCard.Pique },
-            new Card(3) { Type = TypeCard.Trefle },
-            new Card(4) {  Type = TypeCard.Coeur },
-            new Card(5) {  Type = TypeCard.Coeur },
-            new Card(10) { Type = TypeCard.Coeur }
-        };
-        // (listGagnant,winner,combination)=Rule.RulePair(listPlayers,listCard);
-        // (listGagnant,winner,combination)=Rule.RuleThreeSameKind(listPlayers,listCard);
-        (listGagnant,winner,combination)=Rule.RuleFollow(listPlayers,listCard);
-        // (listGagnant,winner,combination)=Rule.RuleFollowFlush(listPlayers,listCard);
-        // (listGagnant,winner,combination)=Rule.RuleFollowRoyalFlush(listPlayers,listCard);
-        // (listGagnant,winner,combination)=Rule.RuleFull(listPlayers,listCard);
-        Console.WriteLine($"le gagnant est : {winner.Name}");
-        if(listGagnant !=null)
-        {
-            Console.WriteLine($"Les autres gagnants sont : ");
-            foreach(Player gagnant in listGagnant)
-            {
-                Console.WriteLine($"{gagnant.Name}");
-            }
-        }
-        player1.UserCheckCard();
     }
     public static int IntEnter()
     {
