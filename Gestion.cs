@@ -95,8 +95,7 @@ public class Gestion
                 minBet=50*((int)newBetMin+1);
             foreach(Player p in allPlayers)
             {
-                p.AllIn=false;
-                p.BetOfTheRound=0;
+                p.DefaultFields();
             }
         }
         if(!allPlayers.Contains(player))

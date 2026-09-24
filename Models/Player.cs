@@ -41,6 +41,15 @@ public class Player
     {
         this.BetOfTheRound=0;
     }
+    public void defaultAllIn()
+    {
+        this.AllIn=false;
+    }
+    public void DefaultFields()
+    {
+        EmptyTemporaryBet();
+        defaultAllIn();
+    }
     public void CheckBet()
     {
         Console.WriteLine($"\nVotre mise : {this.BetOfTheRound}");

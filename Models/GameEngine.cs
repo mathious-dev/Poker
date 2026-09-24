@@ -71,13 +71,11 @@ public class GameEngine
 
     public void Round(List<Player>allPlayers,int minBet,int indexBigBindPlayer,Player humanPlayer)
     {
-        Random randomCard=new Random();
         var listCards=new List<Card>();
         var listCardsOnTable=new List<Card>();
         int handTour=1;
         var firstPlayerToPlay=new Player();
         listCards=Card.GeneralDeckCard();
-        listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
         GiveCardsStart(allPlayers,listCards);
         while(handTour<5 &&allPlayers.Count()>1)
         {
