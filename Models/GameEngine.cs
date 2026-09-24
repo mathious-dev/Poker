@@ -57,11 +57,11 @@ public class GameEngine
     
     public int ValidationBetForBotAndPlayerOrBetMore(Player player,List<Player> players,int minBet,ref int counterPlayerplayed)
     {
-        if(!player.AllIn&&player.BetOfTheTour<minBet)
+        if(!player.AllIn&&player.BetOfTheRound<minBet)
             player.PlayerSleep(players);  
-        else if(player.BetOfTheTour>minBet)
+        else if(player.BetOfTheRound>minBet)
         {
-            minBet=player.BetOfTheTour;
+            minBet=player.BetOfTheRound;
             counterPlayerplayed=1;
         }
         else
@@ -161,10 +161,6 @@ public class GameEngine
             switch(choice)
             {
                 case 1:UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
-                case 2 when humanPlayer.Coin<=minBet:
-                humanPlayer.PlayerAllIn();
-                playerHasBetOrFinish = true;
-                break;
                 case 2 : 
                 humanPlayer.FollowBet(minBet);
                 playerHasBetOrFinish = true;
