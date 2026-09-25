@@ -189,6 +189,7 @@ public class GameEngine
         {
             int stop=0;
             int AllInChoice=0;
+            int SecondAllInChoice=0;
             if(minBet>humanPlayer.Coin)
             {
                 Console.WriteLine($"\nLe minimum a miser est de {minBet}, ce qui est supérieur à votre pot {humanPlayer.Coin} Voulez-vous all-in? \n1.OUI\n2.NON, vous vous couchez");
@@ -233,6 +234,21 @@ public class GameEngine
                     {
                         Console.WriteLine("\nVous devez choisir une option !");
                     } 
+                }
+            }
+            else if(amountBet>humanPlayer.Coin)
+            {
+                Console.WriteLine("\nErreur de montant vous ne pouvez pas mettre plus que votre pot\nVoulez-vous all-in?");
+                Console.WriteLine("\n1.OUI\n2.NON");
+                while(SecondAllInChoice!=1&&SecondAllInChoice!=2)
+                {
+                    SecondAllInChoice=Gestion.IntEnter();
+                    if(SecondAllInChoice==1)
+                        humanPlayer.PlayerAllIn();
+                    else if(SecondAllInChoice==2)
+                        Console.WriteLine("\nAnnulation...");
+                    else
+                        Console.WriteLine("\nVous devez choisir une option!");
                 }
             }
             else
