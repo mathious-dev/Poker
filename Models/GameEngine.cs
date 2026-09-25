@@ -165,7 +165,7 @@ public class GameEngine
                 humanPlayer.FollowBet(minBet);
                 playerHasBetOrFinish = true;
                 break;
-                case 3:playerHasBetOrFinish = true;break;
+                case 3:playerHasBetOrFinish = true;humanPlayer.PlayerSleep(allPlayersInGame);break;
                 case 4:humanPlayer.CheckCard();humanPlayer.CheckBet();break;
                 case 5:
                 foreach(Player player in allPlayersInGame)
