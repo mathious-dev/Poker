@@ -84,7 +84,7 @@ public class GameEngine
             Console.WriteLine($"\n______________________________\nTour {handTour}");
             Console.ResetColor();
             if(humanPlayer.Name!=null)//si l'humain est toujours là 
-                humanPlayer.UserCheckCard();
+                humanPlayer.CheckCard();
             GiveCardOnTable(handTour,listCards,listCardsOnTable);
             if (allPlayers.Count(p => !p.AllIn) > 1)
             {
@@ -166,7 +166,7 @@ public class GameEngine
                 playerHasBetOrFinish = true;
                 break;
                 case 3:playerHasBetOrFinish = true;break;
-                case 4:humanPlayer.UserCheckCard();humanPlayer.CheckBet();break;
+                case 4:humanPlayer.CheckCard();humanPlayer.CheckBet();break;
                 case 5:
                 foreach(Player player in allPlayersInGame)
                 {

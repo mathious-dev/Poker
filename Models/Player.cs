@@ -26,7 +26,7 @@ public class Player
         allPlayers.Remove(this);
         Console.WriteLine($"\nLe joueur {this.Name} s'est couché");
     }
-    public void UserCheckCard()
+    public void CheckCard()
     {
         Console.WriteLine($"\nles cartes du joueur {this.Name} sont ");
         foreach(Card card in this.Deck)
@@ -119,7 +119,7 @@ public class Player
     {
         foreach(Player player in players)
         {
-            player.UserCheckCard();
+            player.CheckCard();
         }
     }
     /*
