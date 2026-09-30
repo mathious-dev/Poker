@@ -63,14 +63,14 @@ public class Gestion
             choice=IntEnter();
             switch(choice)
             {
-                case 1:MethodForEditCoinsAndAmountBet(true,false);break;
-                case 2:MethodForEditCoinsAndAmountBet(false,true);break;
-                case 3:;break;
+                case 1:MethodForEditCoinsAmountBetAndBots(true,false,false);break;
+                case 2:MethodForEditCoinsAmountBetAndBots(false,true,false);break;
+                case 3:MethodForEditCoinsAmountBetAndBots(false,false,true);break;
                 case 4:Console.WriteLine("\nFin des modifications...");Menu();break;
             }
         }
     }
-    public void MethodForEditCoinsAndAmountBet(bool coins,bool amountBet)
+    public void MethodForEditCoinsAmountBetAndBots(bool coins,bool amountBet,bool amountBot)
     {
         int amount=0;
         bool valid=false;
@@ -82,7 +82,13 @@ public class Gestion
                 EditCoinsGestion(ref valid,amount);
             else if(amountBet)
                 EditAmountBetGestion(ref valid,amount);
+            else if(amountBot)
+                EditAmountBotGestion(ref valid,amount);
         }
+    }
+    public void EditAmountBotGestion(ref bool valid,int amount)
+    {
+        valid=GameConfig.EditNumberBots(amount);
     }
     public void EditCoinsGestion(ref bool valid,int amount)
     {

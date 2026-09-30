@@ -13,13 +13,12 @@ public static class GameConfig
     {
         if(newAmount<500||newAmount>20000||newAmount%2!=0)
         {
-            Console.WriteLine("Erreur, le montant doit être entre 500 et 20000 jetons et un chiffre paire");
+            Console.WriteLine("\nLe montant doit être entre 500 et 20000 jetons et un chiffre paire");
             return false;
         }
         else
         {
             StartCoins=newAmount;
-            Console.WriteLine($"\nNouveau montant de jetons : {StartCoins}");
             return true;
         }
     }
@@ -27,13 +26,25 @@ public static class GameConfig
     {
         if(newAmountBet<50||newAmountBet>StartCoins||newAmountBet>10000||newAmountBet%2!=0)
         {
-            Console.WriteLine("Erreur, le montant de mise doit être entre 50 et 10000 ,un chiffre paire et surtout inférieur au pot de base du joueur");
+            Console.WriteLine("\nLe montant de mise doit être entre 50 et 10000 ,un chiffre paire et surtout inférieur au pot de base du joueur");
             return false;
         }
         else
         {
             StartAmountBet=newAmountBet;
-            Console.WriteLine($"\nNouvelle mise de base : {StartCoins}");
+            return true;
+        }
+    }
+    public static bool EditNumberBots(int newAmountBots)
+    {
+        if(newAmountBots<2||newAmountBots>6)
+        {
+            Console.WriteLine("\nLe nombre de bots doit être minimum de 2 bots et maximum de 6 bots");
+            return false;
+        }
+        else
+        {
+            NumberBots=newAmountBots;
             return true;
         }
     }
