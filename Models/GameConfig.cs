@@ -4,6 +4,7 @@ public static class GameConfig
 {
     public static int StartCoins{get;set;}=1000;
     public static int StartAmountBet{get;set;}=50;
+    public static int NumberBots{get;set;}=3;
     public static void ShowInformations()
     {
         Console.WriteLine($"\nLes jetons de base pour les joueurs est de {StartCoins}\nLa mise de base est de {StartAmountBet}");

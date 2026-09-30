@@ -8,15 +8,11 @@ public class GameEngine
     public void Init(List<Bot>bots)
     {
         Random randomLevel=new Random();
-        Bot bot1=new Bot(randomLevel.Next(1,4))
-        {Name="bot1",};
-        Bot bot2=new Bot(randomLevel.Next(1,4))
-        {Name="bot2",  };
-        Bot bot3=new Bot(randomLevel.Next(1,4))
-        { Name="bot3",};
-        bots.Add(bot1);
-        bots.Add(bot2);
-        bots.Add(bot3);
+        for(int i=1;i<=GameConfig.NumberBots;i++)
+        {
+            var bot=new Bot(randomLevel.Next(1,4)){Name="bot"+i};
+            bots.Add(bot);
+        }
         Console.ForegroundColor=ConsoleColor.Green;
         Console.WriteLine("\nCommencement de la partie.");
         foreach(Bot bot in bots)

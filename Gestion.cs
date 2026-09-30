@@ -41,10 +41,19 @@ public class Gestion
     public void EditSettings()
     {
         string[] options={"Jetons de base","Mise de départ","Nombre de bots","Quitter"};
+        string[] informations={"Jetons de base","Mise de départ","Nombre de bots"};
+        string[] informationsFromGameConfig;
         int choice=0;
         while(choice!=4)
         {
+            informationsFromGameConfig=new string[]{GameConfig.StartCoins.ToString(),GameConfig.StartAmountBet.ToString(),GameConfig.NumberBots.ToString()};
             int i=1;
+            int j=0;
+            foreach(string information in informations)
+            {
+                Console.WriteLine($"\n{information} : {informationsFromGameConfig[j]}"); 
+                j++;
+            }
             foreach(string option in options)
             {
                 Console.WriteLine($"\n{i}.{option}");
