@@ -4,7 +4,7 @@ public class Player
 {
     public event Action<int> OnMoneyBet;
     public string Name{get;set;}
-    public int Coin{get;set;}=1000;
+    public int Coin{get;set;}=GameConfig.StartCoins;
     public int BetOfTheRound{get;set;}=0;
     public int BetOfTheTour{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];

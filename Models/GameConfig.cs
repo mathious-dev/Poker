@@ -22,4 +22,18 @@ public static class GameConfig
             return true;
         }
     }
+    public static bool EditAmountBet(int newAmountBet)
+    {
+        if(newAmountBet<50||newAmountBet>StartCoins||newAmountBet>10000||newAmountBet%2!=0)
+        {
+            Console.WriteLine("Erreur, le montant de mise doit être entre 50 et 10000 ,un chiffre paire et surtout inférieur au pot de base du joueur");
+            return false;
+        }
+        else
+        {
+            StartAmountBet=newAmountBet;
+            Console.WriteLine($"\nNouvelle mise de base : {StartCoins}");
+            return true;
+        }
+    }
 }

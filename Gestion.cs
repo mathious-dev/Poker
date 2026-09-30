@@ -33,20 +33,60 @@ public class Gestion
             {
                 case 1: StartGame();countGame++;break;
                 case 2: Combinations();break;
-                case 3 :EditSettings() ;break;
+                case 3 :EditSettings();break;
                 case 4: Console.WriteLine("Fin du jeu");break;
             }
         }
     }
     public void EditSettings()
     {
-        string[] options={"Jetons de base","Nombre de bots","Mise de départ"};
-        
+        string[] options={"Jetons de base","Mise de départ","Nombre de bots","Quitter"};
+        int choice=0;
+        while(choice!=4)
+        {
+            int i=1;
+            foreach(string option in options)
+            {
+                Console.WriteLine($"\n{i}.{option}");
+                i++;
+            }
+            Console.WriteLine("\nQue voulez-vous modifier?");
+            choice=IntEnter();
+            switch(choice)
+            {
+                case 1:MethodForEditCoinsAndAmountBet(true,false);break;
+                case 2:MethodForEditCoinsAndAmountBet(false,true);break;
+                case 3:;break;
+                case 4:Console.WriteLine("\nFin des modifications...");Menu();break;
+            }
+        }
+    }
+    public void MethodForEditCoinsAndAmountBet(bool coins,bool amountBet)
+    {
+        int amount=0;
+        bool valid=false;
+        while(!valid)
+        {
+            Console.WriteLine("\nNouveau montant : ");
+            amount=IntEnter();
+            if(coins)
+                EditCoinsGestion(ref valid,amount);
+            else if(amountBet)
+                EditAmountBetGestion(ref valid,amount);
+        }
+    }
+    public void EditCoinsGestion(ref bool valid,int amount)
+    {
+        valid=GameConfig.EditCoins(amount);
+    }
+    public void EditAmountBetGestion(ref bool valid,int amount)
+    {
+        valid=GameConfig.EditAmountBet(amount);
     }
     public void StartGame()
     {
         int indexPlayerBigBind=0;
-        int minBet=50;
+        int minBet=GameConfig.StartAmountBet;
         int countRound=1;
         var newPlayer=new Player();
         var allPlayers=new List<Player>();
