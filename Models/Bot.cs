@@ -90,7 +90,6 @@ public class Bot : Player
     }
     public bool Bluff(int level)
     {
-        Random randomBluff=new Random();
         bool bluff=false;
         switch(level)
         {
@@ -102,9 +101,8 @@ public class Bot : Player
     }
     public void BluffBot(int chanceForBluff,ref bool bluff)
     {
-        Random randomBluff=new Random();
         int isBluffing=0;
-        isBluffing=randomBluff.Next(1,chanceForBluff);
+        isBluffing=Random.Shared.Next(1,chanceForBluff);
         if(isBluffing==1)
             bluff=true;  
         else
@@ -285,7 +283,6 @@ public class Bot : Player
         int betMin=0;
         int betMax=0;
         bool bluffOrNot=false;
-        Random randomBet=new Random();
         if(combinationStart==1)
             bluffOrNot=Bluff(level);
         if(!bluffOrNot)
@@ -299,7 +296,7 @@ public class Bot : Player
             if (betMin >= betMax) 
                 amountBet = betMin; 
             else
-                amountBet = randomBet.Next(betMin, betMax + 1); //+1 pour inclure le betMax
+                amountBet = Random.Shared.Next(betMin, betMax + 1); //+1 pour inclure le betMax
         }
         else
             amountBet=this.Coin;

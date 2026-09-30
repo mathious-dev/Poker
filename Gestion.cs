@@ -16,7 +16,7 @@ public class Gestion
         string[] options;
         int choice=1;
         int countGame=1;
-        while(choice!=3)
+        while(choice!=4)
         {
             int i=1;
             if(countGame>1)
@@ -66,7 +66,7 @@ public class Gestion
                 case 1:MethodForEditCoinsAmountBetAndBots(true,false,false);break;
                 case 2:MethodForEditCoinsAmountBetAndBots(false,true,false);break;
                 case 3:MethodForEditCoinsAmountBetAndBots(false,false,true);break;
-                case 4:Console.WriteLine("\nFin des modifications...");Menu();break;
+                case 4:Console.WriteLine("\nFin des modifications...");break;
             }
         }
     }

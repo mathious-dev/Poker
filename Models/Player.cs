@@ -9,6 +9,7 @@ public class Player
     public int BetOfTheTour{get;set;}=0;
     public Card[]? Deck{get;set;}=new Card[2];
     public bool AllIn{get;set;}=false;
+    public bool HasFolded{get;set;}=false;
 
     public void Bet(int AmountBet)
     {
@@ -21,9 +22,9 @@ public class Player
         //événement
         OnMoneyBet?.Invoke(AmountBet);
     }
-    public void PlayerSleep(List<Player>allPlayers)
+    public void PlayerSleep()
     {
-        allPlayers.Remove(this);
+        this.HasFolded=true;
         Console.WriteLine($"\nLe joueur {this.Name} s'est couché");
     }
     public void CheckCard()
@@ -37,18 +38,11 @@ public class Player
                 Console.WriteLine($"\n{card.Number} de {card.Type}");
         }
     }
-    public void EmptyTemporaryBet()
-    {
-        this.BetOfTheRound=0;
-    }
-    public void defaultAllIn()
-    {
-        this.AllIn=false;
-    }
     public void DefaultFields()
     {
-        EmptyTemporaryBet();
-        defaultAllIn();
+        this.BetOfTheRound=0;
+        this.AllIn=false;
+        this.HasFolded=false;
     }
     public void CheckBet()
     {

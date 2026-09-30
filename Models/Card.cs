@@ -43,7 +43,7 @@ public class Card
                 listCards.Add(new Card(i){Type=(TypeCard)j});
             }
         }
-        listCards.OrderBy(c=>randomCard.Next()).ToList();
+        listCards=listCards.OrderBy(c=>randomCard.Next()).ToList();
         return listCards;
     }
     public static void ShowCards(IEnumerable<Card> cards)

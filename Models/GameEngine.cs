@@ -51,10 +51,10 @@ public class GameEngine
         Console.ResetColor();
     }
     
-    public int ValidationBetForBotAndPlayerOrBetMore(Player player,List<Player> players,int minBet,ref int counterPlayerplayed)
+    public int ValidationBetForBotAndPlayerOrBetMore(Player player,int minBet,ref int counterPlayerplayed)
     {
         if(!player.AllIn&&player.BetOfTheRound<minBet)
-            player.PlayerSleep(players);  
+            player.PlayerSleep();  
         else if(player.BetOfTheRound>minBet)
         {
             minBet=player.BetOfTheRound;
@@ -103,7 +103,7 @@ public class GameEngine
                     {
                         if (countPlayerPlayed >= allPlayers.Count() || allPlayers.Count() == 1)
                             break;
-                        if(player.AllIn)
+                        if(player.AllIn||player.HasFolded)
                         {
                             countPlayerPlayed++;
                             continue;// On passe directement au joueur suivant
@@ -111,13 +111,13 @@ public class GameEngine
                         if(player is Bot bot)
                         {
                             bot.BotAction(minBet,listCardsOnTable);
-                            minBet=ValidationBetForBotAndPlayerOrBetMore(bot,allPlayers,minBet,ref countPlayerPlayed);
+                            minBet=ValidationBetForBotAndPlayerOrBetMore(bot,minBet,ref countPlayerPlayed);
                         }
                         else
                         {
                             Console.Write("\n Que voulez-vous faire?");
                             ChoiceUser(minBet,allPlayers,humanPlayer);
-                            minBet=ValidationBetForBotAndPlayerOrBetMore(player,allPlayers, minBet,ref countPlayerPlayed);
+                            minBet=ValidationBetForBotAndPlayerOrBetMore(player,minBet,ref countPlayerPlayed);
                         }
                     }
                 }
@@ -162,7 +162,7 @@ public class GameEngine
                 humanPlayer.FollowBet(minBet);
                 playerHasBetOrFinish = true;
                 break;
-                case 3:playerHasBetOrFinish = true;humanPlayer.PlayerSleep(allPlayersInGame);break;
+                case 3:playerHasBetOrFinish = true;humanPlayer.PlayerSleep();break;
                 case 4:humanPlayer.CheckCard();humanPlayer.CheckBet();break;
                 case 5:
                 foreach(Player player in allPlayersInGame)
@@ -203,7 +203,7 @@ public class GameEngine
                         
                     else if(AllInChoice==2)
                     {
-                        humanPlayer.PlayerSleep(allPlayersInGame);
+                        humanPlayer.PlayerSleep();
                         hasBetOrFinish=true;
                         finish = true;
                     }
@@ -261,7 +261,7 @@ public class GameEngine
     public void WhoWin(List<Player> allPlayers,List<Card> mainCards)
     {
         string combination;
-        var winner = new Player();
+        Player winner = null;
         var winners=new List<Player>();
         (winners,winner,combination)=Rule.RuleFollowRoyalFlush(allPlayers,mainCards);
         if(CheckWinner(winners,winner,combination,mainCards))return;
@@ -302,7 +302,7 @@ public class GameEngine
     }
     public bool CheckWinner(List<Player>winners,Player winner,string combination,List<Card>cardsOnTable)
     {
-        if(winner.Name!=null)
+        if(winner!=null)
         {
             OneWinnerOrMore(winners,winner,combination,cardsOnTable);
             return true;

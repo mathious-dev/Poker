@@ -25,7 +25,7 @@ public class Rule
         int numCombination=1;
         var othersWinners=new List<Player>();
         int higherCard=0;
-        var winner=new Player();
+        Player winner = null;
         foreach(var player in players)
         {
             var higherCardPlayer=player.Deck.Max(c=>c.Number);
@@ -54,7 +54,7 @@ public class Rule
     {
         int numCombination=3;
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValueFirstPair=0;
         int highestValueSecondPair=0;
         int highestValueLastCardForWinner=0;
@@ -140,7 +140,7 @@ public class Rule
     {
         int numCombination=6;
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValue=0;
         foreach(var player in players)
         {
@@ -158,7 +158,7 @@ public class Rule
     {
         int numCombination=5;
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValue=0;
         foreach(var player in players)
         {
@@ -172,7 +172,7 @@ public class Rule
     {
         int numCombination=7;
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValueTriple=0;
         int highestValuePair=0;
         foreach(var player in players)
@@ -209,7 +209,7 @@ public class Rule
     {
         int numCombination=9;
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValue=0;
         foreach(var player in players)
         {
@@ -223,7 +223,7 @@ public class Rule
     {
         int numCombination=10;
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValue=0;
         foreach(var player in players)
         {
@@ -237,7 +237,7 @@ public class Rule
     public static (List<Player>,Player,int) GroupRuleSameNumber(List<Player>players,List<Card> cardPlace,int sameKindNumber)
     {
         var othersWinners=new List<Player>();
-        var winner=new Player();
+        Player winner = null;
         int highestValue=0;
         foreach(var player in players)
         {
