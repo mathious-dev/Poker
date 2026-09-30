@@ -14,7 +14,7 @@ public class Player
     {
         BetOfTheTour += AmountBet;  
         BetOfTheRound += AmountBet;
-        Console.WriteLine($"\n Le joueur {this.Name} a misé {AmountBet}");
+        Console.WriteLine($"\t\t\t\tLe joueur {this.Name} a misé {AmountBet}");
         if(AmountBet>=Coin)
             this.AllIn=true;
         Coin-=AmountBet;

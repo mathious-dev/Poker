@@ -96,6 +96,7 @@ public class GameEngine
                                             .Concat(allPlayers.Take(indexBigBindPlayer+1))
                                             .ToList();   
                     }
+                    System.Console.WriteLine("\n|||Mise de base|||");
                     allPlayers.Last().Bet(minBet);
                     allPlayers[allPlayers.Count()-2].Bet(minBet/2);
                 }

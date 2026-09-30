@@ -13,12 +13,16 @@ public class Gestion
     }
     public void Menu()
     {
+        string[] options;
         int choice=1;
-        
+        int countGame=1;
         while(choice!=3)
         {
             int i=1;
-            string[] options={"Jouer","Voir les combinaisons possibles","Quitter"};
+            if(countGame>1)
+                options=["Rejouer","Voir les combinaisons possibles","Configuration de jeu","Quitter"];
+            else
+                options=["Jouer","Voir les combinaisons possibles","Configuration de jeu","Quitter"];
             foreach(string option in options)
             {
                 Console.WriteLine($"\n{i}.{option}");
@@ -27,11 +31,17 @@ public class Gestion
             choice=IntEnter();
             switch(choice)
             {
-                case 1: StartGame();break;
+                case 1: StartGame();countGame++;break;
                 case 2: Combinations();break;
-                case 3: Console.WriteLine("Fin du jeu");break;
+                case 3 :EditSettings() ;break;
+                case 4: Console.WriteLine("Fin du jeu");break;
             }
         }
+    }
+    public void EditSettings()
+    {
+        string[] options={"Jetons de base","Nombre de bots","Mise de départ"};
+        
     }
     public void StartGame()
     {
