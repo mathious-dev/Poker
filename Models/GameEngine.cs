@@ -96,12 +96,12 @@ public class GameEngine
                     allPlayers.Last().Bet(minBet);
                     allPlayers[allPlayers.Count()-2].Bet(minBet/2);
                 }
-                while(allPlayers.Count()>countPlayerPlayed&& allPlayers.Count() > 1)
+                while(allPlayers.Count()>countPlayerPlayed&& allPlayers.Count(p => !p.HasFolded) > 1)
                 {
                     Console.WriteLine($"\nLa mise minimal est de : {minBet}");
                     foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
                     {
-                        if (countPlayerPlayed >= allPlayers.Count() || allPlayers.Count() == 1)
+                        if (countPlayerPlayed >= allPlayers.Count() || allPlayers.Count(p => !p.HasFolded) == 1)
                             break;
                         if(player.AllIn||player.HasFolded)
                         {
@@ -122,8 +122,9 @@ public class GameEngine
                     }
                 }
             }
+            var activePlayersThisRound = allPlayers.Where(p => !p.HasFolded).ToList();
             if(handTour==4||allPlayers.All(p=>p.AllIn))
-                Player.EveryPlayerInGameShowCard(allPlayers);
+                Player.EveryPlayerInGameShowCard(activePlayersThisRound);
             handTour++;
             foreach(Player p in allPlayers)
             {
@@ -131,14 +132,15 @@ public class GameEngine
             }
             ShowMainPot();
         }
-        if(allPlayers.Count()==1)
+        var finalActivePlayers = allPlayers.Where(p => !p.HasFolded).ToList();
+        if(finalActivePlayers.Count()==1)
         {
             var winner= new Player();
-            winner=allPlayers.First();
+            winner=finalActivePlayers.First();
             winner.PlayerWin(MainPot,null,listCardsOnTable);
         }
         else
-            WhoWin(allPlayers,listCardsOnTable);
+            WhoWin(finalActivePlayers,listCardsOnTable);
         MainPot=0;
     }
     public void ChoiceUser(int minBet,List<Player>allPlayersInGame,Player humanPlayer)
