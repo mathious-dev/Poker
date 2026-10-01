@@ -162,6 +162,7 @@ public class Gestion
             {
                 p.DefaultFields();
             }
+            Console.Clear();
         }
         if(!allPlayers.Contains(player))
         {

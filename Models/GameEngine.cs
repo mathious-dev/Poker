@@ -73,7 +73,7 @@ public class GameEngine
         var firstPlayerToPlay=new Player();
         listCards=Card.GeneralDeckCard();
         GiveCardsStart(allPlayers,listCards);
-        while(handTour<5 &&allPlayers.Count()>1)
+        while(handTour<5 &&allPlayers.Count(p=>!p.HasFolded)>1)
         {
             int countPlayerPlayed=0;
             Console.ForegroundColor=ConsoleColor.DarkBlue;
@@ -92,14 +92,14 @@ public class GameEngine
                                             .Concat(allPlayers.Take(indexBigBindPlayer+1))
                                             .ToList();   
                     }
-                    System.Console.WriteLine("\n|||Mise de base|||");
+                    Console.WriteLine("\n\t\t\t\t|||Mise de base|||");
                     allPlayers.Last().Bet(minBet);
                     allPlayers[allPlayers.Count()-2].Bet(minBet/2);
                 }
                 while(allPlayers.Count()>countPlayerPlayed&& allPlayers.Count(p => !p.HasFolded) > 1)
                 {
-                    Console.WriteLine($"\nLa mise minimal est de : {minBet}");
-                    foreach(Player player in allPlayers.ToList())//on crée une copie de la liste pour éviter une erreur
+                    Console.WriteLine($"\n\t\tLa mise minimal est de : {minBet}");
+                    foreach(Player player in allPlayers)
                     {
                         if (countPlayerPlayed >= allPlayers.Count() || allPlayers.Count(p => !p.HasFolded) == 1)
                             break;
@@ -122,7 +122,7 @@ public class GameEngine
                     }
                 }
             }
-            var activePlayersThisRound = allPlayers.Where(p => !p.HasFolded).ToList();
+            var activePlayersThisRound = allPlayers.Where(p => !p.HasFolded).ToList();//répétition
             if(handTour==4||allPlayers.All(p=>p.AllIn))
                 Player.EveryPlayerInGameShowCard(activePlayersThisRound);
             handTour++;
@@ -132,7 +132,7 @@ public class GameEngine
             }
             ShowMainPot();
         }
-        var finalActivePlayers = allPlayers.Where(p => !p.HasFolded).ToList();
+        var finalActivePlayers = allPlayers.Where(p => !p.HasFolded).ToList();//répétition
         if(finalActivePlayers.Count()==1)
         {
             var winner= new Player();
@@ -159,7 +159,7 @@ public class GameEngine
             choice=Gestion.IntEnter();
             switch(choice)
             {
-                case 1:UserBet(minBet,humanPlayer,allPlayersInGame,ref playerHasBetOrFinish);break;
+                case 1:UserBet(minBet,humanPlayer,ref playerHasBetOrFinish);break;
                 case 2 : 
                 humanPlayer.FollowBet(minBet);
                 playerHasBetOrFinish = true;
@@ -179,7 +179,7 @@ public class GameEngine
             }
         }
     }
-    public void UserBet(int minBet,Player humanPlayer,List<Player>allPlayersInGame,ref bool hasBetOrFinish)
+    public void UserBet(int minBet,Player humanPlayer,ref bool hasBetOrFinish)
     {
         bool finish=false;
         int amountBet=0;
