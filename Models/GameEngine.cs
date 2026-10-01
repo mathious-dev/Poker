@@ -10,7 +10,14 @@ public class GameEngine
         Random randomLevel=new Random();
         for(int i=1;i<=GameConfig.NumberBots;i++)
         {
-            var bot=new Bot(randomLevel.Next(1,4)){Name="bot"+i};
+            int randomNumber=Random.Shared.Next(1,4);
+            Bot bot=randomNumber switch
+            {
+                1=>new BotEasy{Name="bot"+i},
+                2=>new BotMiddle{Name="bot"+i},
+                _=>new BotHard{Name="bot"+i}
+            };
+            
             bots.Add(bot);
         }
         Console.ForegroundColor=ConsoleColor.Green;
