@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System;
 namespace Poker.Models;
-
+using Poker.Models.Bots;
 public class GameEngine
 {
     public int MainPot { get; set; } = 0;

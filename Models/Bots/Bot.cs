@@ -1,4 +1,4 @@
-﻿namespace Poker.Models;
+﻿namespace Poker.Models.Bots;
 
 public class Bot : Player
 {

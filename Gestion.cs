@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Poker.Models;
+using Poker.Models.Bots;
 public class Gestion
 {
     Player player=new Player();
