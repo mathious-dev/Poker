@@ -63,4 +63,8 @@ public class BotHard: Bot
                 break;
         }
     }
+    public override bool Bluff()
+    {
+        return BluffBot(4);
+    }
 }

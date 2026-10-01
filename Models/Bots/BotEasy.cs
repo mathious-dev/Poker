@@ -51,4 +51,8 @@ public class BotEasy : Bot
                 break;
         }
     }
+    public override bool Bluff()
+    {
+        return BluffBot(11);
+    }
 }

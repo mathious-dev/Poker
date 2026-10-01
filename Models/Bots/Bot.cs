@@ -1,6 +1,6 @@
 ﻿namespace Poker.Models.Bots;
 
-public class Bot : Player
+public abstract class Bot : Player
 {
     public override void PlayerAllIn()
     {
@@ -8,10 +8,8 @@ public class Bot : Player
         Console.WriteLine($"\nLe bot {this.Name} fait tapis !");
         this.AllIn=true;
     }
-    public virtual void ProbabilityBet(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax,int minBetOnTable)
-    {
-        
-    }
+    public abstract void ProbabilityBet(int highestValue,int combinationInt,int maxCoin,ref int betMin,ref int betMax,int minBetOnTable);
+    public abstract bool Bluff();
     public void BotAction(int minBetOnTable,List<Card>?cards)
     {
         var (combinationStart,highestValue)=EvaluateDeck(this.Deck,cards);
@@ -76,25 +74,10 @@ public class Bot : Player
         return((int)Rule.RuleEnum.HighCard,highCard);
 
     }
-    public bool Bluff()
+    
+    public bool BluffBot(int chanceForBluff)
     {
-        bool bluff=false;
-        // switch(level)
-        // {
-        //     case 1: BluffBot(11,ref bluff);break;//facile
-        //     case 2: BluffBot(6,ref bluff);break;//moyen
-        //     case 3: BluffBot(4,ref bluff);break;//difficile
-        // }
-       return bluff;
-    }
-    public void BluffBot(int chanceForBluff,ref bool bluff)
-    {
-        int isBluffing;
-        isBluffing=Random.Shared.Next(1,chanceForBluff);
-        if(isBluffing==1)
-            bluff=true;  
-        else
-            bluff=false;
+        return Random.Shared.Next(1,chanceForBluff)==1;
     }
     public  int DeclarationOfAction(int highestValue,int combinationStart,int maxCoin,int minBetOnTable)
     {
@@ -102,11 +85,11 @@ public class Bot : Player
         int betMin=0;
         int betMax=0;
         bool bluffOrNot=false;
-        // if(combinationStart==1)
-        //     bluffOrNot=Bluff(level);
+        if(combinationStart==1)
+            bluffOrNot=Bluff();
         if(!bluffOrNot)
         {
-            this.ProbabilityBet(highestValue,combinationStart,maxCoin,ref betMin,ref betMax,minBetOnTable);
+            ProbabilityBet(highestValue,combinationStart,maxCoin,ref betMin,ref betMax,minBetOnTable);
             if (betMin >= betMax) 
                 amountBet = betMin; 
             else
